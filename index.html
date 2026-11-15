@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#fff">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Hitung Barang</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
+</head>
+<body>
+  
+  <header class="header">
+    <h1 class="title">
+      <i class="fa-solid fa-calculator"></i>
+      Hitung Barang
+    </h1>
+    <div class="menu-container">
+      <button id="tombolMenu" type="button">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div id="dropdownMenu" class="dropdown-menu">
+        <button data-menu="home" type="button">
+          <i class="fa-solid fa-home"></i>
+          Halaman utama
+        </button>
+        <button data-menu="produk" type="button">
+          <i class="fa-solid fa-table-list"></i>
+          Data barang
+        </button>
+        <button data-menu="hitung" type="button">
+          <i class="fa-solid fa-undo"></i>
+          Hitung ulang
+        </button>
+        <button data-menu="lihatBackup" type="button">
+          <i class="fa-solid fa-folder-open"></i>
+          Lihat backup
+        </button>
+        <button data-menu="backup" type="button">
+          <i class="fa-solid fa-database"></i>
+          Backup data
+        </button>
+        <button data-menu="dukungan" type="button">
+          <i class="fa-brands fa-whatsapp"></i>
+          Bantuan
+        </button>
+        <button data-menu="gift" type="button">
+          <i class="fa-solid fa-gift"></i>
+          Berikan dukungan
+        </button>
+      </div>
+    </div>
+  </header>
+  
+
+  <div class="wrapper">
+
+    <div class="content">
+
+      <div id="tables" class="tables"></div>
+    </div>
+
+  <!--</div>-->
+
+
+    
+  
+  <div id="modalProduk" class="modal">
+    <div class="box">
+      <div class="row">
+        <h3>Data produk</h3>
+      </div>
+      <div class="row">
+        <label for="merek">Merek/nama</label>
+        <input type="text" id="merek">
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="ukuran">Pilih ukuran</label>
+          <label for="harga">Modal per kg</label>
+        </div>
+        <div class="col">
+          <select id="ukuran">
+            <option value="">- - - - -</option>
+            <option value="5 kg">Kemasan 5 kg</option>
+            <option value="10 kg">Kemasan 10 kg</option>
+            <option value="20 kg">Kemasan 20 kg</option>
+            <option value="25 kg">Kemasan 25 kg</option>
+            <option value="50 kg">Beras 50 kg</option>
+            <option value="eceran">Beras eceran</option>
+            <option value="bukaan">Beras bukaan</option>
+            <option value="4 kg">Kemasan 4 kg</option>
+            <option value="8 kg">Kemasan 8 kg</option>
+            <option value="16 kg">Kemasan 16 kg</option>
+            <option value="48 kg">Beras 48 kg</option>
+          </select>
+          <input type="text" id="harga">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="kemasan">Biaya kemasan</label>
+          <label for="banyak">Banyak/jumlah</label>
+        </div>
+        <div class="col">
+          <input type="text" id="kemasan">
+          <input type="text" id="banyak">
+        </div>
+      </div>
+      <div class="row center mt-20">
+        <button id="close" class="close">
+          Tutup
+        </button>
+        <button id="clear" class="clear">
+          Hapus
+        </button>
+        <button id="save" class="save">
+          Simpan
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="modalHapus" class="modal">
+    <div class="box">
+      <div class="row">
+        <h3>Konfirmasi Hapus</h3>
+      </div>
+      <div class="row">
+        <p>Apakah yakin ingin menghapus produk ini?</p>
+      </div>
+      <div class="row center mt-20">
+        <button id="batalHapus" class="close">Batal</button>
+        <button id="konfirmasiHapus" class="save">Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tabelRincian" class="rincian">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="3">Rincian keuangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="line">
+          <td>Total Beras</td>
+          <td class="end" id="totalberas">0</td>
+          <td>
+            <span onclick="bukaModalRincian('masuk')" class="btn btn-masuk">
+              <i class="fa-solid fa-plus-square"></i>
+            </span>
+          </td>
+        </tr>
+        <tr class="line">
+          <td>Total Uang</td>
+          <td class="end" id="totalUang">0</td>
+          <td>
+            <span onclick="bukaModalRincian('keluar')" class="btn btn-keluar">
+              <i class="fa-solid fa-minus-square"></i>
+            </span>
+          </td>
+        </tr>
+        <tr class="line">
+          <td>Selisih</td>
+          <td class="end" id="keuntunganToko">0</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div id="modalRincian" class="modal">
+    <div class="box">
+      <div class="row">
+        <h3 id="judulRincian">Tambah rincian</h3>
+      </div>
+      <div class="row">
+        <label for="namaRincian">Nama rincian</label>
+        <input type="text" id="namaRincian">
+      </div>
+      <div class="row">
+        <label for="nominalRincian">Nominal rincian</label>
+        <input type="text" id="nominalRincian">
+      </div>
+      <div class="row center mt-20">
+        <button id="batalRincian" class="close">Batal</button>
+        <button id="simpanRincian" class="save">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalHapusRincian" class="modal">
+    <div class="box">
+      <div class="row">
+        <h3>Konfirmasi Hapus</h3>
+      </div>
+      <div class="row">
+        <p>Apakah yakin ingin menghapus rincian ini?</p>
+      </div>
+      <div class="row center mt-20">
+        <button id="batalHapusRincian" class="close">Batal</button>
+        <button id="konfirmasiHapusRincian" class="save">Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <button id="btnOpen" type="button" class="btn-add"><i class="fa-solid fa-plus"></i></button>
+
+  </div>
+
+
+
+<style>
+#halamanBackup {
+  background: #222;
+  min-height: 100vh;
+}
+
+#halamanBackup .infoBackup {
+  background: #daa520;
+  color: white;
+  padding: 12px;
+  text-align: center;
+}
+
+#halamanBackup .infoBackup h3 {
+  margin: 0;
+}
+
+#halamanBackup .infoBackup p {
+  margin: 5px 0 0;
+}
+
+#tutupBackup {
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 20px;
+}
+</style>
+<!-- Input untuk memilih file backup -->
+<input
+  type="file"
+  id="fileBackup"
+  accept=".json,application/json"
+  hidden
+>
+
+<!-- Halaman arsip backup -->
+<div id="halamanBackup" hidden>
+
+  <header class="header">
+    <h3 class="title">
+      <i class="fa-solid fa-calculator"></i>
+      Arsip Hitung Barang
+    </h3>
+
+    <button id="tutupBackup" type="button">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+  </header>
+
+  <div class="infoBackup">
+    <h3 id="tanggalBackup"></h3>
+    <p id="bulanBackup"></p>
+  </div>
+
+  <div class="wrapper">
+    <div class="content">
+      <div id="tablesBackup" class="tables"></div>
+    </div>
+  </div>
+
+</div>
+
+  
+    
+  <script src="script.js"></script>
+  
+</body>
+</html>

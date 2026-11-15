@@ -1,0 +1,435 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-size: 16px;
+  font-family: sans-serif;
+  color: #222;
+  background: #fff;
+  padding-top: 40px;
+}
+
+.btn-add {
+  position: fixed;
+  z-index: 900;
+  bottom: 12px;
+  right: 8px;
+  background: #08a;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-add i {
+  color: #fff;
+  font-size: 18px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid gray;
+  padding: 0 10px;
+  height: 40px;
+  background: goldenrod;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+}
+.header .title {
+  text-align: center;
+  font-size: 20px;
+  color: #fff;
+}
+
+.menu-container {
+  position: relative;
+}
+
+#tombolMenu {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 22px;
+  cursor: pointer;
+  background: transparent;
+  color: #fff;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 220px;
+  padding: 6px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  display: none;
+  z-index: 1000;
+}
+
+.dropdown-menu.show {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-menu button {
+  padding: 12px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  text-transform: capitalize;
+  color: #08a;
+}
+
+.dropdown-menu button:hover {
+  background: #f1f5f9;
+  color: #000;
+}
+
+.wrapper {
+  background: #fff;
+}
+
+.tables .tab-box {
+  width: 100%;
+  position: relative;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.tables .tab-box:last-of-type {
+  margin-bottom: 0;
+}
+.tables h3 {
+  text-align: center;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 30px;
+  background: #242424;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+.tables table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+.tables table:last-child {
+  margin-bottom: 0;
+}
+.tables thead tr {
+  position: sticky;
+  top: 30px;
+  z-index: 99;
+}
+.tables thead th {
+  padding: 4px;
+  border-bottom: 1px solid #ddd;
+  background: goldenrod;
+  color: #000;
+  font-size: 14px;
+}
+.tables tbody td {
+  padding: 4px;
+  text-align: center;
+  font-size: 12px;
+  white-space: nowrap;
+  font-weight: 650;
+  border-bottom: 1px solid #ddd;
+}
+.tables tbody td.start {
+  text-align: left;
+}
+.tables tbody td.end {
+  text-align: right;
+}
+.tables tbody tr:nth-child(even) {
+  background: #ddd;
+}
+.tables tbody tr:hover {
+  background: #bbb;
+}
+.tables thead th:nth-child(1),
+.tables tbody td:nth-child(1) {
+  position: sticky;
+  left: 0;
+}
+.tables thead th:last-of-type,
+.tables tbody td:last-of-type {
+  position: sticky;
+  right: 0;
+}
+.tables thead th:nth-child(1),
+.tables thead th:last-of-type {
+  background: goldenrod;
+}
+.tables tbody tr td:nth-child(1),
+.tables tbody tr td:last-of-type {
+  background: #fff;
+}
+.tables tbody tr:hover td:nth-child(1),
+.tables tbody tr:hover td:last-of-type {
+  background: #bbb;
+}
+.tables tbody tr:nth-child(even) td:nth-child(1),
+.tables tbody tr:nth-child(even) td:last-of-type {
+  background: #ddd;
+}
+.tables tbody tr:nth-child(even):hover td:nth-child(1),
+.tables tbody tr:nth-child(even):hover td:last-of-type {
+  background: #bbb;
+}
+.tables .footer {
+  background: goldenrod;
+  border: 0;
+  padding: 4px;
+  font-weight: 750;
+  font-size: 16px;
+  color: #000;
+  display: flex;
+  justify-content: space-around;
+}
+.tables tbody td:last-of-type div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  text-align: right;
+}
+.tables tbody td span {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid green;
+}
+.tables tbody td span:nth-child(2) {
+  border-color: #f00;
+}
+.tables tbody td span i {
+  font-size: 18px;
+  color: green;
+}
+.tables tbody td span:nth-child(2) i {
+  color: #f00;
+}
+.tables tbody td span i:hover {
+  border-style: inset;
+  background: #fff;
+  scale: 0.8;
+}
+
+.rincian {
+  margin: 10px 4px;
+  padding: 0;
+  display: none;
+  border: 2px solid goldenrod;
+}
+.rincian.show {
+  display: block;
+}
+.rincian table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.rincian table .end {
+  text-align: right;
+}
+.rincian table th {
+  text-align: center;
+  text-transform: capitalize;
+  background: #242424;
+  color: #fff;
+  padding: 8px;
+}
+.rincian table tr {
+  background: #eee;
+}
+.rincian table tr:nth-child(even) {
+  background: #ddd;
+}
+.rincian table td {
+  padding: 6px 10px;
+  font-weight: 650;
+  text-transform: capitalize;
+}
+.rincian table tr.line td {
+  background: goldenrod;
+  color: #fff;
+}
+.rincian table tbody td:last-of-type {
+  padding: 6px 0 6px 6px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  height: 32px;
+}
+.rincian table tbody td:last-of-type span {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid green;
+}
+.rincian table tbody td:last-of-type span.btn-hapus {
+  background: #fff;
+  border-color: #f00;
+}
+.rincian table tbody td:last-of-type span.btn-hapus i {
+  color: #f00;
+}
+.rincian table tbody td:last-of-type i {
+  color: green;
+  font-size: 18px;
+}
+.rincian table tbody td:last-of-type span:hover {
+  border-color: #000;
+}
+.rincian table tbody td:last-of-type i:hover {
+  color: #000;
+}
+.rincian table tbody td:last-of-type span.btn-hapus:hover i {
+  color: #000;
+}
+.rincian table tbody td:last-of-type .btn {
+  background: #fff;
+  border: 1px solid #08a;
+  padding: 2px;
+  border-radius: 0;
+}
+.rincian table tbody td:last-of-type .btn.btn-keluar {
+  border-color: #f00;
+}
+.rincian table tbody td:last-of-type .btn i {
+  color: #08a;
+  font-size: 14px;
+}
+.rincian table tbody td:last-of-type .btn.btn-keluar i {
+  color: #f00;
+}
+.rincian table tbody td:last-of-type .btn.btn-masuk:hover {
+  border-color: #f00;
+}
+.rincian table tbody td:last-of-type .btn:hover {
+  background: #f00;
+}
+.rincian table tbody td:last-of-type .btn:hover i {
+  color: #fff;
+}
+
+.modal {
+  position: fixed;
+  width: 100%;
+  background: rgb(0, 0, 0, 0.5);
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 999;
+  display: none;
+}
+.modal.show {
+  display: block;
+}
+.box {
+  position: fixed;
+  width: 90%;
+  max-width: 300px;
+  padding: 12px 16px;
+  background: #fff;
+  border-radius: 10px;
+  left: 50%;
+  top: 50px;
+  transform: translateX(-50%);
+  box-shadow: 1px 2px 3px #222;
+}
+.box .row {
+  margin-bottom: 10px;
+}
+.box .col {
+  display: flex;
+  justify-content: space-between;
+}
+.box .mt-20 {
+  margin-top: 20px;
+}
+.box .center {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+.box .center button {
+  width: 100%;
+}
+.box label {
+  color: black;
+  font-weight: 500;
+}
+.box h3 {
+  text-align: center;
+  text-transform: capitalize;
+}
+.box input, .box select {
+  display: block;
+  padding: 10px;
+  width: 100%;
+  margin-top: 5px;
+  border-radius: 2px;
+  border: 1px solid gray;
+}
+.box input::placeholder {
+  color: #888;
+  font-family: monospace;
+}
+.box input:focus, .box select:focus {
+  outline-color: #08a;
+}
+.box .col input {
+  border-radius: 2px 0 0 2px;
+}
+.box .col input:nth-child(2) {
+  border-left: 0;
+  border-radius: 0 2px 2px 0;
+}
+.box .col select {
+  background: #fff;
+  border-radius: 2px 0 0 2px;
+}
+.box button {
+  padding: 10px;
+  color: white;
+  font-weight: 600;
+  border-radius: 4px;
+  border-color: #555;
+}
+.box button.close {
+  background: #555;
+}
+.box button.clear {
+  background: darkgoldenrod;
+}
+.box button.save {
+  background: #08a;
+}
