@@ -300,12 +300,12 @@ batalHapus.addEventListener("click", () => {
 // buka modal hapus produk
 function bukaModalHapus(id) {
   idProdukHapus = id;
-  modalHapus.classList.add("show");
+  modalHapus.classList.add("show", "max-top");
 }
 
 // tutup modal hapus
 function tutupModalHapus() {
-  modalHapus.classList.remove("show");
+  modalHapus.classList.remove("show", "max-top");
   idProdukHapus = null;
 }
 
@@ -426,99 +426,104 @@ btnOpen.addEventListener("click", () => {
     merek.focus();
   }, 350);
 
-
-  let kemasanProduk = localStorage.getItem("kemasanProduk");
   let ukuranProduk = localStorage.getItem("ukuranProduk");
+  let kemasanProduk = localStorage.getItem("kemasanProduk");
 
   if (ukuranProduk) {
     kemasan.value = formatStok(kemasanProduk);
-    ukuran.value = ukuranProduk;
+    ukuran.value = ukuranProduk ? ukuranProduk : "0";
   } else {
     kemasan.value = formatStok(3000);
     ukuran.value = "5 kg";
   }
 });
 
-
-let setKemasan= null;
 let setUkuran = "";
+let setKemasan = "";
 ukuran.addEventListener("change", () => {
   localStorage.removeItem("ukuranProduk");
+  localStorage.removeItem("kemasanProduk");
   
   let valUkuran = ukuran.value;
   
   if (valUkuran === "4 kg") {
     kemasan.value = formatStok(2500);
-    setKemasan = 2500;
+    setKemasan = "2500";
     setUkuran = "4 kg";
   }
   
   if (valUkuran === "5 kg") {
     kemasan.value = formatStok(3000);
-    setKemasan = 3000;
+    setKemasan = "3000";
     setUkuran = "5 kg";
   }
   
   if (valUkuran === "8 kg") {
     kemasan.value = formatStok(3000);
-    setKemasan = 3000;
+    setKemasan = "3000";
     setUkuran = "8 kg";
   }
   
   if (valUkuran === "10 kg") {
     kemasan.value = formatStok(3000);
-    setKemasan = 3000;
+    setKemasan = "3000";
     setUkuran = "10 kg";
   }
   
   if (valUkuran === "16 kg") {
     kemasan.value = formatStok(4000);
-    setKemasan = 4000;
+    setKemasan = "4000";
     setUkuran = "16 kg";
   }
   
   if (valUkuran === "20 kg") {
     kemasan.value = formatStok(4000);
-    setKemasan = 4000;
+    setKemasan = "4000";
     setUkuran = "20 kg";
   }
   
   if (valUkuran === "25 kg") {
     kemasan.value = formatStok(4000);
-    setKemasan = 4000;
+    setKemasan = "4000";
     setUkuran = "25 kg";
   }
   
   if (valUkuran === "48 kg") {
-    kemasan.value = "";
-    setKemasan = null
+    kemasan.value = "0";
+    setKemasan = "0";
     setUkuran = "48 kg";
   }
   if (valUkuran === "50 kg") {
-    kemasan.value = "";
-    setKemasan = null
+    kemasan.value = "0";
+    setKemasan = "0";
     setUkuran = "50 kg";
   }
   
   if (valUkuran === "eceran") {
-    kemasan.value = "";
-    setKemasan = null
+    kemasan.value = "0";
+    setKemasan = "0";
     setUkuran = "eceran";
   }
   
   if (valUkuran === "bukaan") {
-    kemasan.value = "";
-    setKemasan = null
+    kemasan.value = "0";
+    setKemasan = "0";
     setUkuran = "bukaan";
   }
 
-  setTimeout(() => harga.focus(), 300);
+  setTimeout(() => {
+    if (merek.value.trim() === "") {
+      merek.focus();
+    } else if (harga.value === "") {
+      harga.focus();
+    } else {
+      banyak.focus();
+    }
+  }, 300);
 
-  localStorage.setItem("kemasanProduk", setKemasan);
   localStorage.setItem("ukuranProduk", setUkuran);
+  localStorage.setItem("kemasanProduk", setKemasan);
 });
-
-
 
 close.addEventListener("click", () => {
   closeModal();
@@ -612,7 +617,7 @@ function clearModal() {
 };
 
 // bagian rincian
-// mwmbuka modal rincian
+// membuka modal rincian
 let jenisRincianAktif = "";
 
 const modalRincian = document.querySelector("#modalRincian");
@@ -1091,26 +1096,26 @@ init();
 const modalHitungUlang = document.querySelector("#modalHitungUlang");
 const modalBackupData = document.querySelector("#modalBackupData");
 document.querySelector("#btnHitungUlang").addEventListener("click", () => {
-  modalHitungUlang.classList.add("show");
+  modalHitungUlang.classList.add("show", "max-top");
 });
 document.querySelector("#btnBackupData").addEventListener("click", () => {
-  modalBackupData.classList.add("show");
+  modalBackupData.classList.add("show", "max-top");
 });
 
 document.querySelector("#batalHitungUlang").addEventListener("click", () => {
-  modalHitungUlang.classList.remove("show");
+  modalHitungUlang.classList.remove("show", "max-top");
 });
 document.querySelector("#batalBackupData").addEventListener("click", () => {
-  modalBackupData.classList.remove("show");
+  modalBackupData.classList.remove("show", "max-top");
 });
 
 document.querySelector("#konfirmasiHitungUlang").addEventListener("click", () => {
   hitungUlang();
-  modalHitungUlang.classList.remove("show");
+  modalHitungUlang.classList.remove("show", "max-top");
 });
 document.querySelector("#konfirmasiBackupData").addEventListener("click", () => {
   hitungUlangBackup();
-  modalBackupData.classList.remove("show");
+  modalBackupData.classList.remove("show", "max-top");
 });
 
 // hitung ulang
@@ -1251,16 +1256,17 @@ async function buatBackup() {
 
 }
 
+document.querySelector('[data-menu="hitung"]').addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
+  modalHitungUlang.classList.add("show", "max-top");
+});
 
-document.querySelector('[data-menu="backup"]')
-  .addEventListener("click", () => {
 
-    dropdownMenu.classList.remove("show");
-
-    //buatBackup();
-    modalBackupData.classList.add("show");
-
-  });
+document.querySelector('[data-menu="backup"]').addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
+  //buatBackup();
+  modalBackupData.classList.add("show", "max-top");
+});
 
 
 // MEMBACA FILE BACKUP
@@ -1271,14 +1277,10 @@ const halamanBackup = document.querySelector("#halamanBackup");
 let dataBackupAktif = null;
 
 // Ketika menu Lihat Backup ditekan
-document.querySelector('[data-menu="lihatBackup"]')
-  .addEventListener("click", () => {
-
-    dropdownMenu.classList.remove("show");
-
-    fileBackup.click();
-
-  });
+document.querySelector('[data-menu="lihatBackup"]').addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
+  fileBackup.click();
+});
 
 
 // Ketika pengguna memilih file JSON

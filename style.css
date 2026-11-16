@@ -388,6 +388,10 @@ body {
   transform: translateX(-50%);
   box-shadow: 1px 2px 3px #222;
 }
+.modal.max-top .box {
+  top: 40%;
+  transform: translate(-50%, -40%);
+}
 .box .row {
   margin-bottom: 10px;
 }
@@ -441,6 +445,9 @@ body {
 .box .col select {
   background: #fff;
   border-radius: 2px 0 0 2px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 .box button {
   padding: 10px;
