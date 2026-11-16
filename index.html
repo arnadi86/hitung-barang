@@ -66,13 +66,13 @@
         </tbody>
       </table>
       <div class="finishing">
-        <button type="button">
-          <i class="fa-solid fa-trash"></i>
-          Hapus data
+        <button id="btnHitungUlang" type="button">
+          <i class="fa-solid fa-undo"></i>
+          Hitung ulang
         </button>
-        <button type="button">
+        <button id="btnBackupData" type="button">
           <i class="fa-solid fa-database"></i>
-          Simpan data
+          Backup data
         </button>
       </div>
     </div>
@@ -179,6 +179,36 @@
         <div class="row center mt-20">
           <button id="batalHapusRincian" class="close">Batal</button>
           <button id="konfirmasiHapusRincian" class="save">Hapus</button>
+        </div>
+      </div>
+    </div>
+    
+    <div id="modalHitungUlang" class="modal">
+      <div class="box">
+        <div class="row">
+          <h3>Konfirmasi</h3>
+        </div>
+        <div class="row">
+          <p>Tindakan ini hanya mengosongkan data untuk hitung ulang tanpa backup data!</p>
+        </div>
+        <div class="row center mt-20">
+          <button id="batalHitungUlang" class="close">Batal</button>
+          <button id="konfirmasiHitungUlang" class="save">Hitung ulang</button>
+        </div>
+      </div>
+    </div>
+    
+    <div id="modalBackupData" class="modal">
+      <div class="box">
+        <div class="row">
+          <h3>Konfirmasi</h3>
+        </div>
+        <div class="row">
+          <p>Tindakan ini akan membackup data sekaligus mengosongkan seluruh data saat ini!</p>
+        </div>
+        <div class="row center mt-20">
+          <button id="batalBackupData" class="close">Batal</button>
+          <button id="konfirmasiBackupData" class="save">Backup data</button>
         </div>
       </div>
     </div>

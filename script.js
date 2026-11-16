@@ -1087,6 +1087,47 @@ async function init() {
 }
 init();
 
+// hitung ulang atau backup data
+const modalHitungUlang = document.querySelector("#modalHitungUlang");
+const modalBackupData = document.querySelector("#modalBackupData");
+document.querySelector("#btnHitungUlang").addEventListener("click", () => {
+  modalHitungUlang.classList.add("show");
+});
+document.querySelector("#btnBackupData").addEventListener("click", () => {
+  modalBackupData.classList.add("show");
+});
+
+document.querySelector("#batalHitungUlang").addEventListener("click", () => {
+  modalHitungUlang.classList.remove("show");
+});
+document.querySelector("#batalBackupData").addEventListener("click", () => {
+  modalBackupData.classList.remove("show");
+});
+
+document.querySelector("#konfirmasiHitungUlang").addEventListener("click", () => {
+  hitungUlang();
+  modalHitungUlang.classList.remove("show");
+});
+document.querySelector("#konfirmasiBackupData").addEventListener("click", () => {
+  hitungUlangBackup();
+  modalBackupData.classList.remove("show");
+});
+
+// hitung ulang
+async function hitungUlang() {
+  await resetProduk();
+  await resetRincian();
+  await tampilkanProduk();
+  await hitungTotalBeras();
+  await tampilkanRincian();
+}
+
+// hitung ulang + backup data
+async function hitungUlangBackup() {
+  buatBackup();
+  setTimeout(() => hitungUlang(), 1000);
+}
+
 // hapus semua produk
 async function resetProduk() {
 
@@ -1117,7 +1158,7 @@ async function resetProduk() {
 async function resetRincian() {
 
   const transaksi = db.transaction(
-    "rinciqn",
+    "rincian",
     "readwrite"
   );
 
@@ -1216,7 +1257,8 @@ document.querySelector('[data-menu="backup"]')
 
     dropdownMenu.classList.remove("show");
 
-    buatBackup();
+    //buatBackup();
+    modalBackupData.classList.add("show");
 
   });
 

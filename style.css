@@ -405,6 +405,8 @@ body {
 }
 .box .center button {
   width: 100%;
+  white-space: nowrap;
+  text-transform: capitalize;
 }
 .box label {
   color: black;
