@@ -484,3 +484,17 @@ body {
   padding: 10px;
   font-size: 20px;
 }
+
+@keyframes sorotProduk {
+  0%, 100% {
+    background-color: transparent;
+  }
+
+  20%, 80% {
+    background-color: #b9f6ca;
+  }
+}
+
+.baris-produk-baru {
+  animation: sorotProduk 3s ease-in-out;
+}

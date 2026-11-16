@@ -54,7 +54,7 @@ async function tambahProduk(data) {
   return new Promise((resolve, reject) => {
 
     transaksi.oncomplete = () => {
-      resolve("Data berhasil ditambahkan!");
+      resolve(request.result);
     };
 
     transaksi.onerror = () => {
@@ -96,6 +96,7 @@ async function ambilSemuaProduk() {
 }
 
 // tampilkan produk
+let produkTerbaruId = null;
 async function tampilkanProduk() {
 
   const data = await ambilSemuaProduk();
@@ -174,7 +175,7 @@ async function tampilkanProduk() {
       <tbody>
         ${produkUkuran.map((produk, i) => 
           `
-          <tr>
+          <tr data-produk-id="${produk.id}">
             <td>${i + 1}</td>
             <td class="start">${produk.merek}</td>
             <td>${formatStok(produk.jumlah)}</td>
@@ -194,6 +195,13 @@ async function tampilkanProduk() {
     // Judul ukuran
     tabTitle.textContent = `${ukuran ? `Beras ${ukuran}` : "Salah ukuran"}`;
 
+    let textUkuran = "";
+    if (ukuran === "eceran" || ukuran === "bukaan" || ukuran === "") {
+      textUkuran = " kg";
+    } else {
+      textUkuran = " karung";
+    }
+
     // Footer tabel
     const tabFoot = document.createElement("div");
     tabFoot.classList.add("footer");
@@ -203,7 +211,7 @@ async function tampilkanProduk() {
     const span3 = document.createElement("span");
 
     span1.textContent = "Total";
-    span2.textContent = `${formatStok(totalJumlah)} karung`;
+    span2.textContent = `${formatStok(totalJumlah)} ${textUkuran}`;
     span3.textContent = formatAngka.format(totalHarga);
 
     tabFoot.appendChild(span1);
@@ -218,6 +226,30 @@ async function tampilkanProduk() {
     container.appendChild(tabBox);
 
   });
+
+  if (produkTerbaruId !== null) {
+
+    const barisTerbaru = container.querySelector(
+      `[data-produk-id="${produkTerbaruId}"]`
+    );
+  
+    if (barisTerbaru) {
+
+      barisTerbaru.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    
+      barisTerbaru.classList.add("baris-produk-baru");
+    
+      setTimeout(() => {
+        barisTerbaru.classList.remove("baris-produk-baru");
+      }, 3000);
+    
+    }
+  
+    produkTerbaruId = null;
+  }
 
   const totalBeras = await hitungTotalBeras();
 
@@ -503,52 +535,68 @@ async function simpanProduk(data) {
   const transaksi = db.transaction("produk", "readwrite");
   const store = transaksi.objectStore("produk");
 
+  let request;
+
   if (idProdukEdit !== null) {
     data.id = idProdukEdit;
-    store.put(data);
+    request = store.put(data);
   } else {
-    store.add(data);
+    request = store.add(data);
   }
 
   return new Promise((resolve, reject) => {
-    transaksi.oncomplete = () => resolve();
+
+    transaksi.oncomplete = () => {
+      resolve(request.result);
+    };
+
     transaksi.onerror = () => reject(transaksi.error);
     transaksi.onabort = () => reject(transaksi.error);
+
   });
 }
 
 // tombol simpan produk
 save.addEventListener("click", async () => {
 
-    let kemasanvalue;
-    if (kemasan.value.trim() === "") {
-      kemasanvalue = 0;
-    } else {
-      kemasanvalue = Number(kemasan.value.replace(/\./g, ""));
+  let kemasanvalue;
+
+  if (kemasan.value.trim() === "") {
+    kemasanvalue = 0;
+  } else {
+    kemasanvalue = Number(kemasan.value.replace(/\./g, ""));
+  }
+
+  const data = {
+    merek: formatTeks(merek.value.trim()),
+    harga: Number(harga.value.replace(/\./g, "")),
+    kemasan: kemasanvalue,
+    jumlah: ubahStokKeAngka(banyak.value),
+    ukuran: ukuran.value.trim()
+  };
+
+  try {
+
+    const idBaru = await simpanProduk(data);
+
+    if (idProdukEdit === null) {
+      produkTerbaruId = idBaru;
     }
-    const data = {
-      merek: formatTeks(merek.value.trim()),
-      harga: Number(harga.value.replace(/\./g, "")),
-      kemasan: kemasanvalue,
-      jumlah: ubahStokKeAngka(banyak.value),
-      ukuran: ukuran.value.trim()
-    };
 
-    try {
-      await simpanProduk(data);
+    idProdukEdit = null;
 
-      idProdukEdit = null;
-      
-      closeModal();
-      clearModal();
-      await tampilkanProduk();
-      await hitungTotalBeras();
-      await tampilkanRincian();
+    closeModal();
+    clearModal();
 
-    } catch (error) {
-      console.error(error);
-      alert("Gagal menyimpan produk!");
-    }
+    await tampilkanProduk();
+    await hitungTotalBeras();
+    await tampilkanRincian();
+
+  } catch (error) {
+    console.error(error);
+    alert("Gagal menyimpan produk!");
+  }
+
 });
 
 function closeModal() {
@@ -1490,4 +1538,14 @@ document.addEventListener("focusout", (event) => {
   if (event.target.matches("input")) {
     btnOpen.style.display = "flex";
   }
+});
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.querySelector("#tabelRincian")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+  }, 500);
 });
