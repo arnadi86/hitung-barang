@@ -107,9 +107,6 @@ async function tampilkanProduk() {
   const formatAngka = new Intl.NumberFormat("id-ID");
 
   // Mengambil semua ukuran unik
-  /*const ukuranUnik = [...new Set(
-    data.map(produk => produk.ukuran)
-  )];*/
   const urutanUkuran = [
     "4 kg",
     "5 kg",
@@ -384,11 +381,19 @@ banyak.addEventListener("input", () => {
   formatInputStok(banyak);
 });
 
+merek.addEventListener("keydown", function(event) {
+  if (event.key === "Enter") { alert()
+  event.preventDefault();
+  harga.focus();
+  }
+});
+
 btnOpen.addEventListener("click", () => {
   modalProduk.classList.add("show");
   setTimeout(() => {
     merek.focus();
   }, 350);
+
 
   let kemasanProduk = localStorage.getItem("kemasanProduk");
   let ukuranProduk = localStorage.getItem("ukuranProduk");
@@ -514,13 +519,7 @@ async function simpanProduk(data) {
 
 // tombol simpan produk
 save.addEventListener("click", async () => {
-/*
-    const data = {
-      merek: formatTeks(merek.value.trim()),
-      harga: ubahStokKeAngka(harga.value),
-      jumlah: ubahStokKeAngka(banyak.value),
-      ukuran: ukuran.value.trim()
-    };*/
+
     let kemasanvalue;
     if (kemasan.value.trim() === "") {
       kemasanvalue = 0;
@@ -552,57 +551,6 @@ save.addEventListener("click", async () => {
     }
 });
 
-/*
-saves.addEventListener("click", async (event) => {
-  event.preventDefault();
-
-  if (merek.value.trim() === "") {
-    merek.focus();
-    return;
-  }
-  if (harga.value.trim() === "") {
-    harga.focus();
-    return;
-  }
-  if (banyak.value.trim() === "") {
-    banyak.focus();
-    return;
-  }
-  if (ukuran.value.trim() === "") {
-    ukuran.focus();
-    return;
-  }
-  let kemasanvalue;
-  if (kemasan.value.trim() === "") {
-    kemasanvalue = 0;
-  } else {
-    kemasanvalue = Number(kemasan.value.replace(/\./g, ""));
-  }
-  
-
-  const data = {
-    merek: formatTeks(merek.value.trim()),
-    harga: Number(harga.value.replace(/\./g, "")),
-    kemasan: kemasanvalue,
-    jumlah: ubahStokKeAngka(banyak.value),
-    ukuran: ukuran.value.trim()
-  };
-
-  try {
-    const hasil = await tambahProduk(data);
-    console.log("Berhasil:", hasil);
-    //alert("Berhasil");
-    await tampilkanProduk();
-    await hitungTotalBeras();
-    await tampilkanKeuangan();
-    closeModal();
-    clearModal();
-  } catch (error) {
-    console.error(error);
-    alert("Gagal menyimpan data!");
-  }
-});
-*/
 function closeModal() {
   modalProduk.classList.remove("show");
 };
@@ -615,6 +563,7 @@ function clearModal() {
   ukuran.value = "";
 };
 
+// bagian rincian
 // mwmbuka modal rincian
 let jenisRincianAktif = "";
 
@@ -632,11 +581,14 @@ function bukaModalRincian(jenis) {
 
   namaRincian.value = "";
   nominalRincian.value = "";
-
-  judulRincian.textContent =
-    jenis === "masuk"
-      ? "Tambah Uang Masuk"
-      : "Tambah Pengurang";
+  
+  if (jenis === "masuk") {
+    judulRincian.textContent = "Tambah Uang Masuk";
+  } else if (jenis === "keluar") {
+    judulRincian.textContent = "Tambah Utang / Modal";
+  } else if (jenis === "pengeluaran") {
+    judulRincian.textContent = "Tambah Pengeluaran";
+  }
 
   modalRincian.classList.add("show");
 
@@ -680,17 +632,35 @@ async function tampilkanRincian() {
       .textContent.replace(/\./g, "")
   ) || 0;
 
+  // Total uang masuk
   const totalMasuk = data
     .filter(item => item.jenis === "masuk")
-    .reduce((total, item) => total + item.nominal, 0);
+    .reduce((total, item) =>
+      total + Number(item.nominal || 0), 0);
 
+  // Total utang dan modal
   const totalKeluar = data
     .filter(item => item.jenis === "keluar")
-    .reduce((total, item) => total + item.nominal, 0);
+    .reduce((total, item) =>
+      total + Number(item.nominal || 0), 0);
 
-  const totalUang = totalBeras + totalMasuk;
+  // Total pengeluaran operasional
+  const totalPengeluaran = data
+    .filter(item => item.jenis === "pengeluaran")
+    .reduce((total, item) =>
+      total + Number(item.nominal || 0), 0);
 
-  const keuntunganToko = totalUang - totalKeluar;
+  // Total uang ditambah kembali pengeluaran
+  const totalUang =
+    totalBeras + totalMasuk + totalPengeluaran;
+
+  // Keuntungan kotor
+  const untungKotor =
+    totalUang - totalKeluar;
+
+  // Keuntungan bersih
+  const untungBersih =
+    untungKotor - totalPengeluaran;
 
   const formatAngka = angka =>
     angka.toLocaleString("id-ID");
@@ -719,7 +689,7 @@ async function tampilkanRincian() {
       html += `
         <tr>
           <td>${item.nama}</td>
-          <td class="end">${formatAngka(item.nominal)}</td>
+          <td class="end">${formatAngka(Number(item.nominal))}</td>
           <td>
             <span onclick="editRincian(${item.id})" class="btn-edit">
               <i class="fa-solid fa-square-pen"></i>
@@ -731,6 +701,37 @@ async function tampilkanRincian() {
         </tr>
       `;
     });
+
+  // Rincian pengeluaran (ditampilkan sebelum total uang)
+  data.filter(item => item.jenis === "pengeluaran").forEach(item => {
+    html += `
+      <tr>
+        <td>${item.nama}</td>
+        <td class="end">${formatAngka(Number(item.nominal))}</td>
+        <td>
+          <span onclick="editRincian(${item.id})" class="btn-edit">
+            <i class="fa-solid fa-square-pen"></i>
+          </span>
+          <span onclick="hapusRincian(${item.id})" class="btn-hapus">
+            <i class="fa-solid fa-square-xmark"></i>
+          </span>
+        </td>
+      </tr>
+    `;
+  });
+
+  let textUntung = " kotor";
+  if (totalPengeluaran > 0) {
+    html += `
+      <tr>
+        <td>Total pengeluaran</td>
+        <td class="end">${formatAngka(totalPengeluaran)}</td>
+        <td></td>
+      </tr>
+    `;
+  } else {
+    textUntung = " bersih";
+  }
 
   // Total uang
   html += `
@@ -748,35 +749,72 @@ async function tampilkanRincian() {
     </tr>
   `;
 
-  // Rincian pengurang
-  data.filter(item => item.jenis === "keluar")
-    .forEach(item => {
-      html += `
-        <tr>
-          <td>${item.nama}</td>
-          <td class="end">${formatAngka(item.nominal)}</td>
-          <td>
-            <span onclick="editRincian(${item.id})" class="btn-edit">
-              <i class="fa-solid fa-square-pen"></i>
-            </span>
-            <span onclick="hapusRincian(${item.id})" class="btn-hapus">
-              <i class="fa-solid fa-square-xmark"></i>
-            </span>
-          </td>
-        </tr>
-      `;
-    });
+  // Rincian utang dan modal
+  data.filter(item => item.jenis === "keluar").forEach(item => {
+    html += `
+      <tr>
+        <td>${item.nama}</td>
+        <td class="end">${formatAngka(Number(item.nominal))}</td>
+        <td>
+          <span onclick="editRincian(${item.id})" class="btn-edit">
+            <i class="fa-solid fa-square-pen"></i>
+          </span>
+          <span onclick="hapusRincian(${item.id})" class="btn-hapus">
+            <i class="fa-solid fa-square-xmark"></i>
+          </span>
+        </td>
+      </tr>
+    `;
+  });
 
-  // Keuntungan toko
+  // Untung kotor
   html += `
     <tr class="line">
-      <td>Selisih</td>
+      <td>Untung ${textUntung}</td>
       <td class="end" id="keuntunganToko">
-        ${formatAngka(keuntunganToko)}
+        ${formatAngka(untungKotor)}
       </td>
-      <td></td>
+      <td>
+        <span onclick="bukaModalRincian('pengeluaran')"
+              class="btn btn-masuk">
+          <i class="fa-solid fa-plus-square"></i>
+        </span>
+      </td>
     </tr>
   `;
+
+  // Total pengeluaran
+  data.filter(item => item.jenis === "pengeluaran").forEach(item => {
+    html += `
+      <tr>
+        <td>${item.nama}</td>
+        <td class="end">
+          ${formatAngka(Number(item.nominal))}
+        </td>
+        <td>
+          <span onclick="editRincian(${item.id})" class="btn-edit">
+            <i class="fa-solid fa-square-pen"></i>
+          </span>
+          <span onclick="hapusRincian(${item.id})" class="btn-hapus">
+            <i class="fa-solid fa-square-xmark"></i>
+          </span>
+        </td>
+      </tr>
+    `;
+  });
+
+  // Untung bersih
+  if (totalPengeluaran > 0) {
+    html += `
+      <tr class="line">
+        <td>Untung Bersih</td>
+        <td class="end" id="untungBersih">
+          ${formatAngka(untungBersih)}
+        </td>
+        <td></td>
+      </tr>
+    `;
+  }
 
   tbody.innerHTML = html;
 }
@@ -924,6 +962,7 @@ document.querySelector("#konfirmasiHapusRincian")
       alert("Gagal menghapus rincian!");
     }
 });
+// batas bagian rincian
 
 // format teks
 function formatTeks(teks) {
