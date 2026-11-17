@@ -1489,7 +1489,7 @@ function tampilkanProdukBackup(data) {
 
 function tampilkanRincianBackup(data) {
 
-  const tempat = document.querySelector("#tabelRincian");
+  const tempat = document.querySelector("#tabelRincianBackup");
   tempat.classList.add("show");
 
   // Mengambil data backup
