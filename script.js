@@ -530,6 +530,7 @@ ukuran.addEventListener("change", () => {
 });
 
 close.addEventListener("click", () => {
+  idProdukEdit = null;
   closeModal();
   clearModal();
 });
@@ -741,26 +742,7 @@ async function tampilkanRincian() {
   `;
 
   // Rincian uang masuk
-  data.filter(item => item.jenis === "masuk")
-    .forEach(item => {
-      html += `
-        <tr>
-          <td>${item.nama}</td>
-          <td class="end">${formatAngka(Number(item.nominal))}</td>
-          <td>
-            <span onclick="editRincian(${item.id})" class="btn-edit">
-              <i class="fa-solid fa-square-pen"></i>
-            </span>
-            <span onclick="hapusRincian(${item.id})" class="btn-hapus">
-              <i class="fa-solid fa-square-xmark"></i>
-            </span>
-          </td>
-        </tr>
-      `;
-    });
-
-  // Rincian pengeluaran (ditampilkan sebelum total uang)
-  /*data.filter(item => item.jenis === "pengeluaran").forEach(item => {
+  data.filter(item => item.jenis === "masuk").forEach(item => {
     html += `
       <tr>
         <td>${item.nama}</td>
@@ -775,7 +757,7 @@ async function tampilkanRincian() {
         </td>
       </tr>
     `;
-  });*/
+  });
 
   let textUntung = " kotor";
   if (totalPengeluaran > 0) {
@@ -961,6 +943,13 @@ document.querySelector("#simpanRincian")
 
       await tampilkanRincian();
 
+      setTimeout(() => {
+        tabelRincian.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }, 250);
+
     } catch (error) {
       console.error(error);
       alert("Gagal menyimpan rincian!");
@@ -968,30 +957,23 @@ document.querySelector("#simpanRincian")
 });
 
 // membuka konfirmasi hapus rincian
-const modalHapusRincian =
-  document.querySelector("#modalHapusRincian");
+const modalHapusRincian = document.querySelector("#modalHapusRincian");
 
 function hapusRincian(id) {
   idRincianHapus = id;
-
-  modalHapusRincian.classList.add("show");
+  modalHapusRincian.classList.add("show", "max-top");
 }
 
 // tombol batal & hapus rincian
-document.querySelector("#batalHapusRincian")
-  .addEventListener("click", () => {
-
-    modalHapusRincian.classList.remove("show");
-
-    idRincianHapus = null;
+document.querySelector("#batalHapusRincian").addEventListener("click", () => {
+  modalHapusRincian.classList.remove("show", "max-top");
+  idRincianHapus = null;
 });
 
 // hapus rincian
 async function hapusRincianDB(id) {
   const transaksi = db.transaction("rincian", "readwrite");
-
   transaksi.objectStore("rincian").delete(id);
-
   return new Promise((resolve, reject) => {
     transaksi.oncomplete = () => resolve();
     transaksi.onerror = () => reject(transaksi.error);
@@ -1008,7 +990,7 @@ document.querySelector("#konfirmasiHapusRincian")
     try {
       await hapusRincianDB(idRincianHapus);
 
-      modalHapusRincian.classList.remove("show");
+      modalHapusRincian.classList.remove("show", "maxt-top");
 
       idRincianHapus = null;
 
@@ -1191,11 +1173,6 @@ async function resetRincian() {
 
 
 
-
-
-
-
-
 // bagian backup
 // MEMBUAT FILE BACKUP
 async function buatBackup() {
@@ -1274,7 +1251,6 @@ document.querySelector('[data-menu="backup"]').addEventListener("click", () => {
 
 
 // MEMBACA FILE BACKUP
-
 const fileBackup = document.querySelector("#fileBackup");
 const halamanBackup = document.querySelector("#halamanBackup");
 
@@ -1285,7 +1261,6 @@ document.querySelector('[data-menu="lihatBackup"]').addEventListener("click", ()
   dropdownMenu.classList.remove("show");
   fileBackup.click();
 });
-
 
 // Ketika pengguna memilih file JSON
 fileBackup.addEventListener("change", async () => {
@@ -1356,52 +1331,81 @@ fileBackup.addEventListener("change", async () => {
 
 });
 
-
 // MENAMPILKAN PRODUK DARI FILE BACKUP
-
 function tampilkanProdukBackup(data) {
 
-  const tempat = document.querySelector("#tablesBackup");
+  const container = document.querySelector("#tablesBackup");
+  container.innerHTML = "";
 
-  tempat.innerHTML = "";
+  // Format angka Indonesia
+  const formatAngka = new Intl.NumberFormat("id-ID");
 
-  // Format angka
-  const formatUangBackup = angka => {
-    return new Intl.NumberFormat("id-ID").format(
-      Number(angka) || 0
+  // Urutan ukuran
+  const urutanUkuran = [
+    "4 kg",
+    "5 kg",
+    "8 kg",
+    "10 kg",
+    "16 kg",
+    "20 kg",
+    "25 kg",
+    "50 kg",
+    "48 kg",
+    "eceran",
+    "bukaan",
+    ""
+  ];
+
+  // Mengambil semua ukuran unik
+  const ukuranUnik = urutanUkuran.filter(
+    ukuran => data.produk.some(
+      produk => produk.ukuran === ukuran
+    )
+  );
+
+  ukuranUnik.forEach(ukuran => {
+
+    // Filter produk berdasarkan ukuran
+    const produkUkuran = data.produk.filter(
+      produk => produk.ukuran === ukuran
     );
-  };
 
-  // Kelompokkan produk berdasarkan ukuran
-  const kelompok = {};
+    // Menghitung total jumlah
+    const totalJumlah = produkUkuran.reduce(
+      (total, produk) => total + Number(produk.jumlah || 0),
+      0
+    );
 
-  data.produk.forEach(item => {
+    let ukuranAsli;
 
-    const ukuran = item.ukuran || "Lainnya";
-
-    if (!kelompok[ukuran]) {
-      kelompok[ukuran] = [];
+    if (
+      ukuran === "eceran" ||
+      ukuran === "bukaan" ||
+      ukuran === ""
+    ) {
+      ukuranAsli = 1;
+    } else {
+      ukuranAsli = Number(parseFloat(ukuran));
     }
 
-    kelompok[ukuran].push(item);
+    // Menghitung total nilai stok
+    const totalHarga = produkUkuran.reduce(
+      (total, produk) =>
+        total + (
+          (
+            (Number(produk.harga) * ukuranAsli) +
+            Number(produk.kemasan || 0)
+          ) * Number(produk.jumlah || 0)
+        ),
+      0
+    );
 
-  });
+    // Membuat tabel
+    const tabBox = document.createElement("div");
+    const tabTitle = document.createElement("h3");
 
-  // Buat tabel untuk setiap ukuran
-  Object.entries(kelompok).forEach(([ukuran, produk]) => {
+    tabBox.classList.add("tab-box");
 
-    let totalKarung = 0;
-    let totalModal = 0;
-
-    const bagian = document.createElement("div");
-
-    // Judul tabel
-    const judul = document.createElement("h3");
-    judul.textContent = `BERAS ${ukuran}`;
-
-    bagian.appendChild(judul);
-
-    // Buat tabel
     const tabel = document.createElement("table");
 
     tabel.innerHTML = `
@@ -1414,56 +1418,70 @@ function tampilkanProdukBackup(data) {
           <th>Jumlah</th>
         </tr>
       </thead>
-      <tbody></tbody>
-      <tfoot>
-        <tr>
-          <th colspan="2">Total</th>
-          <th class="totalBackupKarung"></th>
-          <th></th>
-          <th class="totalBackupModal"></th>
-        </tr>
-      </tfoot>
+
+      <tbody>
+        ${produkUkuran.map((produk, i) => {
+
+          const modal =
+            (Number(produk.harga) * ukuranAsli) +
+            Number(produk.kemasan || 0);
+
+          return `
+            <tr>
+              <td>${i + 1}</td>
+              <td class="start">${produk.merek}</td>
+              <td>${formatStok(produk.jumlah)}</td>
+              <td class="end">${formatAngka.format(modal)}</td>
+              <td class="end">
+                ${formatAngka.format(modal * Number(produk.jumlah || 0))}
+              </td>
+            </tr>
+          `;
+
+        }).join("")}
+      </tbody>
     `;
 
-    const tbody = tabel.querySelector("tbody");
+    // Judul ukuran
+    tabTitle.textContent =
+      `${ukuran ? `Beras ${ukuran}` : "Salah ukuran"}`;
 
-    produk.forEach((item, index) => {
+    let textUkuran = "";
 
-      const banyak = Number(item.jumlah) || 0;
-      const modal = Number(item.harga) || 0;
-      const jumlah = banyak * modal;
+    if (
+      ukuran === "eceran" ||
+      ukuran === "bukaan" ||
+      ukuran === ""
+    ) {
+      textUkuran = " kg";
+    } else {
+      textUkuran = " karung";
+    }
 
-      totalKarung += banyak;
-      totalModal += jumlah;
+    // Footer tabel
+    const tabFoot = document.createElement("div");
+    tabFoot.classList.add("footer");
 
-      const baris = document.createElement("tr");
+    const span1 = document.createElement("span");
+    const span2 = document.createElement("span");
+    const span3 = document.createElement("span");
 
-      const kolom = [
-        index + 1,
-        item.merek,
-        banyak,
-        formatUangBackup(modal),
-        formatUangBackup(jumlah)
-      ];
+    span1.textContent = "Total";
+    span2.textContent =
+      `${formatStok(totalJumlah)} ${textUkuran}`;
+    span3.textContent =
+      formatAngka.format(totalHarga);
 
-      kolom.forEach(nilai => {
-        const td = document.createElement("td");
-        td.textContent = nilai;
-        baris.appendChild(td);
-      });
+    tabFoot.appendChild(span1);
+    tabFoot.appendChild(span2);
+    tabFoot.appendChild(span3);
 
-      tbody.appendChild(baris);
+    // Memasukkan elemen ke halaman
+    tabBox.appendChild(tabTitle);
+    tabBox.appendChild(tabel);
+    tabBox.appendChild(tabFoot);
 
-    });
-
-    tabel.querySelector(".totalBackupKarung").textContent =
-      totalKarung;
-
-    tabel.querySelector(".totalBackupModal").textContent =
-      formatUangBackup(totalModal);
-
-    bagian.appendChild(tabel);
-    tempat.appendChild(bagian);
+    container.appendChild(tabBox);
 
   });
 
@@ -1471,24 +1489,87 @@ function tampilkanProdukBackup(data) {
 
 function tampilkanRincianBackup(data) {
 
-  const tempat = document.querySelector("#tablesBackup");
+  const tempat = document.querySelector("#tabelRincian");
+  tempat.classList.add("show");
 
-  // Judul rincian
-  const judul = document.createElement("h3");
-  judul.textContent = "RINCIAN KEUANGAN";
+  // Mengambil data backup
+  const produk = data.produk || [];
+  const rincian = data.rincian || [];
 
-  tempat.appendChild(judul);
+  const formatAngka = angka =>
+    Number(angka || 0).toLocaleString("id-ID");
 
-  // Buat tabel
+  // Menghitung total beras dari produk backup
+  const totalBeras = produk.reduce((total, item) => {
+
+    let ukuran = Number.parseFloat(item.ukuran);
+
+    if (
+      item.ukuran === "eceran" ||
+      item.ukuran === "bukaan" ||
+      item.ukuran === "" ||
+      Number.isNaN(ukuran)
+    ) {
+      ukuran = 1;
+    }
+
+    const harga = Number(item.harga) || 0;
+    const kemasan = Number(item.kemasan) || 0;
+    const jumlah = Number(item.jumlah) || 0;
+
+    return total + ((harga * ukuran) + kemasan) * jumlah;
+
+  }, 0);
+
+  // Total uang masuk
+  const totalMasuk = rincian
+    .filter(item => item.jenis === "masuk")
+    .reduce((total, item) =>
+      total + (Number(item.nominal) || 0), 0);
+
+  // Total utang dan modal
+  const totalKeluar = rincian
+    .filter(item => item.jenis === "keluar")
+    .reduce((total, item) =>
+      total + (Number(item.nominal) || 0), 0);
+
+  // Total pengeluaran operasional
+  const totalPengeluaran = rincian
+    .filter(item => item.jenis === "pengeluaran")
+    .reduce((total, item) =>
+      total + (Number(item.nominal) || 0), 0);
+
+  // Total uang
+  const totalUang =
+    totalBeras + totalMasuk + totalPengeluaran;
+
+  // Keuntungan kotor
+  const untungKotor =
+    totalUang - totalKeluar;
+
+  // Keuntungan bersih
+  const untungBersih =
+    untungKotor - totalPengeluaran;
+
+  let textUntung = " kotor";
+
+  if (totalPengeluaran === 0) {
+    textUntung = " bersih";
+  }
+
+  // Membuat wadah rincian backup
+  const wadah = document.createElement("div");
+  wadah.id = "rincianBackup";
+
+  //const judul = document.createElement("h3");
+  //judul.textContent = "RINCIAN KEUANGAN";
+
   const tabel = document.createElement("table");
 
   tabel.innerHTML = `
     <thead>
       <tr>
-        <th>No</th>
-        <th>Nama</th>
-        <th>Jenis</th>
-        <th>Nominal</th>
+        <th colspan="3">Rincian keuangan</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -1496,61 +1577,109 @@ function tampilkanRincianBackup(data) {
 
   const tbody = tabel.querySelector("tbody");
 
-  let totalMasuk = 0;
-  let totalKeluar = 0;
-
-  data.rincian.forEach((item, index) => {
-
-    const nominal = Number(item.nominal) || 0;
-
-    if (item.jenis === "masuk") {
-      totalMasuk += nominal;
-    }
-
-    if (item.jenis === "keluar") {
-      totalKeluar += nominal;
-    }
+  // Fungsi membuat baris
+  function tambahBaris(nama, nominal, line = false) {
 
     const tr = document.createElement("tr");
 
-    const isi = [
-      index + 1,
-      item.nama,
-      item.jenis === "masuk" ? "Masuk" : "Keluar",
-      new Intl.NumberFormat("id-ID").format(nominal)
-    ];
+    if (line) {
+      tr.classList.add("line");
+    }
 
-    isi.forEach(nilai => {
-      const td = document.createElement("td");
-      td.textContent = nilai;
-      tr.appendChild(td);
-    });
+    const tdNama = document.createElement("td");
+    const tdNominal = document.createElement("td");
+    const tdAksi = document.createElement("td");
+
+    tdNama.textContent = nama;
+    tdNominal.textContent = formatAngka(nominal);
+
+    tdNominal.classList.add("end");
+
+    tr.appendChild(tdNama);
+    tr.appendChild(tdNominal);
+    tr.appendChild(tdAksi);
 
     tbody.appendChild(tr);
+  }
 
-  });
+  // Total beras
+  tambahBaris("Total beras", totalBeras, true);
 
-  tempat.appendChild(tabel);
+  // Rincian uang masuk
+  rincian
+    .filter(item => item.jenis === "masuk")
+    .forEach(item => {
+      tambahBaris(
+        item.nama,
+        Number(item.nominal) || 0
+      );
+    });
+
+  // Total pengeluaran
+  if (totalPengeluaran > 0) {
+    tambahBaris("Total pengeluaran", totalPengeluaran);
+  }
+
+  // Total uang
+  tambahBaris("Total uang", totalUang, true);
+
+  // Rincian utang dan modal
+  rincian
+    .filter(item => item.jenis === "keluar")
+    .forEach(item => {
+      tambahBaris(
+        item.nama,
+        Number(item.nominal) || 0
+      );
+    });
+
+  // Untung kotor / bersih
+  tambahBaris(
+    `Untung${textUntung}`,
+    untungKotor,
+    true
+  );
+
+  // Rincian pengeluaran operasional
+  rincian
+    .filter(item => item.jenis === "pengeluaran")
+    .forEach(item => {
+      tambahBaris(
+        item.nama,
+        Number(item.nominal) || 0
+      );
+    });
+
+  // Untung bersih
+  if (totalPengeluaran > 0) {
+    tambahBaris(
+      "Untung Bersih",
+      untungBersih,
+      true
+    );
+  }
+
+  // Memasukkan elemen ke halaman
+  //wadah.appendChild(judul);
+  wadah.appendChild(tabel);
+
+  // Menghindari rincian backup tampil berulang
+  const lama = tempat.querySelector("#rincianBackup");
+
+  if (lama) {
+    lama.remove();
+  }
+
+  tempat.appendChild(wadah);
 
 }
 
-
-document.querySelector("#tutupBackup")
-  .addEventListener("click", () => {
-
-    halamanBackup.hidden = true;
-
-    document.querySelector("body > .header").hidden = false;
-    document.querySelector("body > .wrapper").hidden = false;
-
-  });
+document.querySelector("#tutupBackup").addEventListener("click", () => {
+  halamanBackup.hidden = true;
+  document.querySelector("body > .header").hidden = false;
+  document.querySelector("body > .wrapper").hidden = false;
+});
 // batas bagian backup
-
-
-
-
-
-
 
 
 const tombolMenu = document.querySelector("#tombolMenu");
@@ -1574,7 +1703,6 @@ document.addEventListener("keydown", (event) => {
     dropdownMenu.classList.remove("show");
   }
 });
-
 
 
 document.addEventListener("focusin", (event) => {
