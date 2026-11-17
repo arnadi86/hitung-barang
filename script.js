@@ -95,6 +95,8 @@ async function ambilSemuaProduk() {
 
 }
 
+const tabelRincian = document.querySelector("#tabelRincian");
+const starting = document.querySelector("#starting");
 // tampilkan produk
 let produkTerbaruId = null;
 async function tampilkanProduk() {
@@ -254,8 +256,10 @@ async function tampilkanProduk() {
   const totalBeras = await hitungTotalBeras();
 
   if (totalBeras === 0) {
+    starting.classList.add("show");
     tabelRincian.classList.remove("show")
   } else {
+    starting.classList.remove("show")
     tabelRincian.classList.add("show");
   }
 
@@ -756,7 +760,7 @@ async function tampilkanRincian() {
     });
 
   // Rincian pengeluaran (ditampilkan sebelum total uang)
-  data.filter(item => item.jenis === "pengeluaran").forEach(item => {
+  /*data.filter(item => item.jenis === "pengeluaran").forEach(item => {
     html += `
       <tr>
         <td>${item.nama}</td>
@@ -771,7 +775,7 @@ async function tampilkanRincian() {
         </td>
       </tr>
     `;
-  });
+  });*/
 
   let textUntung = " kotor";
   if (totalPengeluaran > 0) {
@@ -1586,11 +1590,11 @@ document.addEventListener("focusout", (event) => {
 
 window.addEventListener("load", () => {
   setTimeout(() => {
-    document.querySelector("#tabelRincian")
-      .scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+    //document.querySelector("#tabelRincian")
+    tabelRincian.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   }, 500);
 });
 
