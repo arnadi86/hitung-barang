@@ -1561,9 +1561,6 @@ function tampilkanRincianBackup(data) {
   const wadah = document.createElement("div");
   wadah.id = "rincianBackup";
 
-  //const judul = document.createElement("h3");
-  //judul.textContent = "RINCIAN KEUANGAN";
-
   const tabel = document.createElement("table");
 
   tabel.innerHTML = `
@@ -1660,7 +1657,6 @@ function tampilkanRincianBackup(data) {
   }
 
   // Memasukkan elemen ke halaman
-  //wadah.appendChild(judul);
   wadah.appendChild(tabel);
 
   // Menghindari rincian backup tampil berulang
@@ -1680,6 +1676,103 @@ document.querySelector("#tutupBackup").addEventListener("click", () => {
   document.querySelector("body > .wrapper").hidden = false;
 });
 // batas bagian backup
+
+
+const nomorWhatsApp = "6281234567890";
+
+// 1. Hubungi WhatsApp
+function kirimWhatsApp() {
+
+  const pesan = "Halo, saya ingin bertanya.";
+
+  const url =
+    `https://wa.me/${nomorWhatsApp}?text=${encodeURIComponent(pesan)}`;
+
+  window.open(url, "_blank");
+
+}
+
+// 2. Kirim laporan toko
+function kirimLaporanWhatsApp() {
+
+  const totalBeras = document.querySelector("#totalberas").textContent;
+  const totalUang = document.querySelector("#totalUang").textContent;
+  const keuntungan = document.querySelector("#keuntunganToko").textContent;
+
+  const pesan = `
+LAPORAN TOKO
+
+Total Beras: ${totalBeras}
+Total Uang: ${totalUang}
+Keuntungan: ${keuntungan}
+
+Terima kasih.
+  `;
+
+  const url =
+    `https://wa.me/${nomorWhatsApp}?text=${encodeURIComponent(pesan)}`;
+
+  window.open(url, "_blank");
+
+}
+
+
+document.querySelector('[data-menu="kirimBackup"]').addEventListener("click", async () => {
+  dropdownMenu.classList.remove("show");
+  await kirimBackupWhatsApp();
+});
+
+// 3. Kirim data backup WhatsApp
+
+async function kirimBackupWhatsApp() {
+
+  try {
+
+    const produk = await ambilSemuaProduk();
+    const rincian = await ambilSemuaRincian();
+
+    const data = {
+      produk,
+      rincian
+    };
+
+    const json = JSON.stringify(data, null, 2);
+
+    console.log("Ukuran JSON:", json.length);
+
+    const file = new File(
+      [json],
+      "backup-toko.json",
+      {
+        type: "application/json"
+      }
+    );
+
+    console.log("File:", file);
+    console.log("Ukuran file:", file.size);
+    console.log("Tipe file:", file.type);
+
+    console.log(
+      "Can Share:",
+      navigator.canShare({ files: [file] })
+    );
+
+    await navigator.share({
+      files: [file]
+    });
+
+  } catch (error) {
+
+    console.error("Nama error:", error.name);
+    console.error("Pesan error:", error.message);
+
+    alert(error.name + ": " + error.message);
+
+  }
+
+}
+
+
 
 
 const tombolMenu = document.querySelector("#tombolMenu");
@@ -1718,7 +1811,6 @@ document.addEventListener("focusout", (event) => {
 
 window.addEventListener("load", () => {
   setTimeout(() => {
-    //document.querySelector("#tabelRincian")
     tabelRincian.scrollIntoView({
       behavior: "smooth",
       block: "start"
