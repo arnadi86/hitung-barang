@@ -827,7 +827,7 @@ async function tampilkanRincian() {
     html += `
       <tr>
         <td>${item.nama}</td>
-        <td class="end">
+        <td class="end nopeng">
           ${formatAngka(Number(item.nominal))}
         </td>
         <td>
@@ -1707,14 +1707,22 @@ function kirimLaporanWhatsApp() {
 
   const totalBeras = document.querySelector("#totalberas").textContent;
   const totalUang = document.querySelector("#totalUang").textContent;
-  const keuntungan = document.querySelector("#keuntunganToko").textContent;
+  const untungKotor = document.querySelector("#keuntunganToko").textContent;
+  const untungBersih = document.querySelector("#untungBersih").textContent;
+  let pengeluaran;
+  document.querySelectorAll(".nopeng").forEach(nopeng => {
+    totalPengeluaran += nopeng;
+  });
+  
 
   const pesan = `
 LAPORAN TOKO
 
 Total Beras: ${totalBeras}
 Total Uang: ${totalUang}
-Keuntungan: ${keuntungan}
+Untung Kotor: ${untungKotor}
+Pengeluaran: ${pengeluaran}
+Untung Bersih: ${untungBersih}
 
 Terima kasih.
   `;
