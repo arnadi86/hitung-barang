@@ -383,7 +383,6 @@ console.log("data: ", data)
 
   document.querySelector("#totalberas").textContent =
     totalBeras.toLocaleString("id-ID");
-  //console.log("totalberas: ", totalBeras)
   return totalBeras;
 
 }
@@ -418,7 +417,7 @@ banyak.addEventListener("input", () => {
 });
 
 merek.addEventListener("keydown", function(event) {
-  if (event.key === "Enter") { alert()
+  if (event.key === "Enter") {
   event.preventDefault();
   harga.focus();
   }
@@ -441,6 +440,7 @@ btnOpen.addEventListener("click", () => {
     ukuran.value = "5 kg";
   }
 });
+
 
 let setUkuran = "";
 let setKemasan = "";
@@ -540,6 +540,52 @@ clear.addEventListener("click", () => {
   clearModal();
 });
 
+const semuaKolom = [
+  document.querySelector("#merek"),
+  document.querySelector("#ukuran"),
+  document.querySelector("#harga"),
+  document.querySelector("#kemasan"),
+  document.querySelector("#banyak")
+];
+
+semuaKolom.forEach((kolom, index) => {
+
+  kolom.addEventListener("keydown", function(e) {
+
+    if (e.key !== "Enter") return;
+
+    e.preventDefault();
+
+    const berikutnya = semuaKolom
+      .slice(index + 1)
+      .find(el =>
+        el &&
+        !el.disabled &&
+        !el.readOnly &&
+        el.value.trim() === ""
+      );
+
+    if (berikutnya) {
+
+      berikutnya.focus();
+
+    } else {
+
+      const semuaTerisi = semuaKolom.every(el =>
+        el &&
+        el.value.trim() !== ""
+      );
+
+      if (semuaTerisi) {
+        document.querySelector("#save").click();
+      }
+
+    }
+
+  });
+
+});
+
 // simpan produk
 async function simpanProduk(data) {
   const transaksi = db.transaction("produk", "readwrite");
@@ -552,6 +598,7 @@ async function simpanProduk(data) {
     request = store.put(data);
   } else {
     request = store.add(data);
+    setTimeout(() => btnOpen.click(), 2500);
   }
 
   return new Promise((resolve, reject) => {
@@ -1212,7 +1259,7 @@ async function buatBackup() {
 
     // Nama file
     const namaFile =
-      `Backup_HitungBarang_${sekarang.getDate()}-${sekarang.getMonth() + 1}-${sekarang.getFullYear()}.json`;
+      `Backup_HB_${sekarang.getDate()}-${sekarang.getMonth() + 1}-${sekarang.getFullYear()}.json`;
 
     // Unduh file
     const link = document.createElement("a");
@@ -1729,13 +1776,13 @@ function kirimLaporanWhatsApp() {
     .format(totalPengeluaran);
 
   const pesan = [
-    "LAPORAN TOKO",
+    "*LAPORAN TOKO*",
     "",
-    `Total Beras: ${totalBeras}`,
-    `Total Uang: ${totalUang}`,
-    `Untung Kotor: ${untungKotor}`,
-    `Pengeluaran: ${pengeluaran}`,
-    `Untung Bersih: ${untungBersih}`,
+    `Total Beras :  ${totalBeras}`,
+    `Total Uang :  ${totalUang}`,
+    `Untung Kotor :  ${untungKotor}`,
+    `Pengeluaran :  ${pengeluaran}`,
+    `Untung Bersih :  ${untungBersih}`,
     "",
     "Terima kasih."
   ].join("\n");
