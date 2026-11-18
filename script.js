@@ -1709,11 +1709,13 @@ function kirimLaporanWhatsApp() {
   const totalUang = document.querySelector("#totalUang").textContent;
   const untungKotor = document.querySelector("#keuntunganToko").textContent;
   const untungBersih = document.querySelector("#untungBersih").textContent;
-  let pengeluaran;
+  let totalPengeluaran = 0;
   document.querySelectorAll(".nopeng").forEach(nopeng => {
-    totalPengeluaran += nopeng;
+    nominal = Number(nopeng.textContent.replace(/\D/g, "")) || 0;
+    totalPengeluaran += nominal;
   });
-  
+
+  const pengeluaran = new Intl.NumberFormat("id-ID").format(totalPengeluaran);
 
   const pesan = `
 LAPORAN TOKO
