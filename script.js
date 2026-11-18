@@ -1717,14 +1717,28 @@ Terima kasih.
 }
 
 
-document.querySelector('[data-menu="kirimBackup"]').addEventListener("click", async () => {
-  dropdownMenu.classList.remove("show");
-  await kirimBackupWhatsApp();
-});
+document.querySelector('[data-menu="siapkanBackup"]')
+  .addEventListener("click", () => {
+
+    //dropdownMenu.classList.remove("show");
+
+    siapkanBackupWhatsApp();
+
+  });
+
+document.querySelector('[data-menu="kirimBackup"]')
+  .addEventListener("click", () => {
+
+    //dropdownMenu.classList.remove("show");
+
+    kirimBackupWhatsApp();
+
+  });
 
 // 3. Kirim data backup WhatsApp
+let fileBackupWhatsApp = null;
 
-async function kirimBackupWhatsApp() {
+async function siapkanBackupWhatsApp() {
 
   try {
 
@@ -1738,34 +1752,40 @@ async function kirimBackupWhatsApp() {
 
     const json = JSON.stringify(data, null, 2);
 
-    console.log("Ukuran JSON:", json.length);
-
-    const file = new File(
+    fileBackupWhatsApp = new File(
       [json],
       "backup-toko.json",
-      {
-        type: "application/json"
-      }
+      { type: "application/json" }
     );
 
-    console.log("File:", file);
-    console.log("Ukuran file:", file.size);
-    console.log("Tipe file:", file.type);
+    alert("Backup siap dibagikan!");
 
-    console.log(
-      "Can Share:",
-      navigator.canShare({ files: [file] })
-    );
+  } catch (error) {
+
+    console.error(error);
+    alert(error.message);
+
+  }
+
+}
+
+async function kirimBackupWhatsApp() {
+
+  try {
+
+    if (!fileBackupWhatsApp) {
+      alert("Siapkan backup terlebih dahulu!");
+      return;
+    }
 
     await navigator.share({
-      files: [file]
+      files: [fileBackupWhatsApp],
+      title: "Backup Data Toko"
     });
 
   } catch (error) {
 
-    console.error("Nama error:", error.name);
-    console.error("Pesan error:", error.message);
-
+    console.error(error);
     alert(error.name + ": " + error.message);
 
   }
