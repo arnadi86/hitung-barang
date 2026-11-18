@@ -1709,8 +1709,9 @@ function kirimLaporanWhatsApp() {
   const totalUang = document.querySelector("#totalUang").textContent;
   const untungKotor = document.querySelector("#keuntunganToko").textContent;
   const untungBersih = document.querySelector("#untungBersih").textContent;
+  
   let totalPengeluaran = 0;
-  document.querySelectorAll(".nopeng").forEach(nopeng => {
+  document.querySelectorAll(".end .nopeng").forEach(nopeng => {
     nominal = Number(nopeng.textContent.replace(/\D/g, "")) || 0;
     totalPengeluaran += nominal;
   });
