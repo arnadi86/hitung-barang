@@ -1,7 +1,7 @@
 
 {
-  "name": "HiBa",
-  "short_name": "HiBa",
+  "name": "HitBar",
+  "short_name": "HitBar",
   "description": "Aplikasi penghitungan stok dan keuangan toko",
   "start_url": "./index.html",
   "scope": "./",

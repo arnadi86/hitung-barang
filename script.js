@@ -1678,12 +1678,16 @@ document.querySelector("#tutupBackup").addEventListener("click", () => {
 // batas bagian backup
 
 
-const nomorWhatsApp = "6281234567890";
-
 // 1. Hubungi WhatsApp
+const nomorWhatsApp = "6281285242366";
+
+document.querySelector('[data-menu="bantuan"]').addEventListener("click", () => {
+  kirimWhatsApp();
+});
+
 function kirimWhatsApp() {
 
-  const pesan = "Halo, saya ingin bertanya.";
+  const pesan = "Halo, saya ingin bertanya tentang aplikasi hitung barang.";
 
   const url =
     `https://wa.me/${nomorWhatsApp}?text=${encodeURIComponent(pesan)}`;
@@ -1693,6 +1697,10 @@ function kirimWhatsApp() {
 }
 
 // 2. Kirim laporan toko
+document.querySelector('[data-menu="kirimLaporan"]').addEventListener("click", () => {
+  kirimLaporanWhatsApp();
+});
+
 function kirimLaporanWhatsApp() {
 
   const totalBeras = document.querySelector("#totalberas").textContent;
@@ -1709,91 +1717,11 @@ Keuntungan: ${keuntungan}
 Terima kasih.
   `;
 
-  const url =
-    `https://wa.me/${nomorWhatsApp}?text=${encodeURIComponent(pesan)}`;
+  const url = `https://wa.me/?text=${encodeURIComponent(pesan)}`;
 
   window.open(url, "_blank");
 
 }
-
-
-document.querySelector('[data-menu="siapkanBackup"]')
-  .addEventListener("click", () => {
-
-    //dropdownMenu.classList.remove("show");
-
-    siapkanBackupWhatsApp();
-
-  });
-
-document.querySelector('[data-menu="kirimBackup"]')
-  .addEventListener("click", () => {
-
-    //dropdownMenu.classList.remove("show");
-
-    kirimBackupWhatsApp();
-
-  });
-
-// 3. Kirim data backup WhatsApp
-let fileBackupWhatsApp = null;
-
-async function siapkanBackupWhatsApp() {
-
-  try {
-
-    const produk = await ambilSemuaProduk();
-    const rincian = await ambilSemuaRincian();
-
-    const data = {
-      produk,
-      rincian
-    };
-
-    const json = JSON.stringify(data, null, 2);
-
-    fileBackupWhatsApp = new File(
-      [json],
-      "backup-toko.json",
-      { type: "application/json" }
-    );
-
-    alert("Backup siap dibagikan!");
-
-  } catch (error) {
-
-    console.error(error);
-    alert(error.message);
-
-  }
-
-}
-
-async function kirimBackupWhatsApp() {
-
-  try {
-
-    if (!fileBackupWhatsApp) {
-      alert("Siapkan backup terlebih dahulu!");
-      return;
-    }
-
-    await navigator.share({
-      files: [fileBackupWhatsApp],
-      title: "Backup Data Toko"
-    });
-
-  } catch (error) {
-
-    console.error(error);
-    alert(error.name + ": " + error.message);
-
-  }
-
-}
-
-
-
 
 const tombolMenu = document.querySelector("#tombolMenu");
 const dropdownMenu = document.querySelector("#dropdownMenu");
