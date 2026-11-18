@@ -1,7 +1,7 @@
 
 {
-  "name": "HitBar",
-  "short_name": "HitBar",
+  "name": "Hitung Barang",
+  "short_name": "HB Toko",
   "description": "Aplikasi penghitungan stok dan keuangan toko",
   "start_url": "./index.html",
   "scope": "./",

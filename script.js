@@ -1682,6 +1682,7 @@ document.querySelector("#tutupBackup").addEventListener("click", () => {
 const nomorWhatsApp = "6281285242366";
 
 document.querySelector('[data-menu="bantuan"]').addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
   kirimWhatsApp();
 });
 
@@ -1698,6 +1699,7 @@ function kirimWhatsApp() {
 
 // 2. Kirim laporan toko
 document.querySelector('[data-menu="kirimLaporan"]').addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
   kirimLaporanWhatsApp();
 });
 
