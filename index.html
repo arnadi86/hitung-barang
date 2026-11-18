@@ -16,6 +16,10 @@
       <i class="fa-solid fa-calculator"></i>
       Hitung Barang
     </h1>
+    <button id="btnPengumuman" type="button">
+      <i class="fa-solid fa-bell"></i>
+      <span id="badgePengumuman"></span>
+    </button>
     <div class="menu-container">
       <button id="tombolMenu" type="button">
         <i class="fa-solid fa-bars"></i>
@@ -258,7 +262,27 @@
     </div>
 
   </div>
+
   
+  <div id="modalPengumuman" class="modal">
+  
+    <div class="modal-content">
+  
+      <div class="modal-header">
+        <h3>Pusat Pengumuman</h3>
+  
+        <button id="tutupPengumuman" type="button">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+  
+      <div id="daftarPengumuman"></div>
+  
+    </div>
+  
+  </div>
+  
+  <script src="pengumuman.js?v=1"></script>
   <script src="script.js?v=1"></script>
   
 </body>

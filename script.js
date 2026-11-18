@@ -1779,3 +1779,8 @@ if ("serviceWorker" in navigator) {
     }
   });
 }
+
+console.log("Data pengumuman:", daftarPengumuman);
+console.log("Tombol lonceng:", btnPengumuman);
+console.log("Badge lonceng:", badgePengumuman);
+console.log("Tempat daftar:", daftarPengumumanEl);
