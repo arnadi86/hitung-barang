@@ -1703,37 +1703,46 @@ document.querySelector('[data-menu="kirimLaporan"]').addEventListener("click", (
   kirimLaporanWhatsApp();
 });
 
+function ambilTeks(selector) {
+  return document.querySelector(selector)
+    .textContent.trim().replace(/\s+/g, " ");
+}
+
 function kirimLaporanWhatsApp() {
 
-  const totalBeras = document.querySelector("#totalberas").textContent;
-  const totalUang = document.querySelector("#totalUang").textContent;
-  const untungKotor = document.querySelector("#keuntunganToko").textContent;
-  const untungBersih = document.querySelector("#untungBersih").textContent;
-  
+  const totalBeras = ambilTeks("#totalberas");
+  const totalUang = ambilTeks("#totalUang");
+  const untungKotor = ambilTeks("#keuntunganToko");
+  const untungBersih = ambilTeks("#untungBersih");
+
   let totalPengeluaran = 0;
-  document.querySelectorAll(".end .nopeng").forEach(nopeng => {
-    nominal = Number(nopeng.textContent.replace(/\D/g, "")) || 0;
+
+  document.querySelectorAll(".nopeng").forEach(nopeng => {
+    const nominal = Number(
+      nopeng.textContent.replace(/\D/g, "")
+    ) || 0;
+
     totalPengeluaran += nominal;
   });
 
-  const pengeluaran = new Intl.NumberFormat("id-ID").format(totalPengeluaran);
+  const pengeluaran = new Intl.NumberFormat("id-ID")
+    .format(totalPengeluaran);
 
-  const pesan = `
-LAPORAN TOKO
-
-Total Beras: ${totalBeras}
-Total Uang: ${totalUang}
-Untung Kotor: ${untungKotor}
-Pengeluaran: ${pengeluaran}
-Untung Bersih: ${untungBersih}
-
-Terima kasih.
-  `;
+  const pesan = [
+    "LAPORAN TOKO",
+    "",
+    `Total Beras: ${totalBeras}`,
+    `Total Uang: ${totalUang}`,
+    `Untung Kotor: ${untungKotor}`,
+    `Pengeluaran: ${pengeluaran}`,
+    `Untung Bersih: ${untungBersih}`,
+    "",
+    "Terima kasih."
+  ].join("\n");
 
   const url = `https://wa.me/?text=${encodeURIComponent(pesan)}`;
 
   window.open(url, "_blank");
-
 }
 
 const tombolMenu = document.querySelector("#tombolMenu");
