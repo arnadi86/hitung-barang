@@ -820,20 +820,22 @@ async function tampilkanRincian() {
   }
 
   // Total uang
-  html += `
-    <tr class="line">
-      <td>Total uang</td>
-      <td class="end" id="totalUang">
-        ${formatAngka(totalUang)}
-      </td>
-      <td>
-        <span onclick="bukaModalRincian('keluar')"
-              class="btn btn-keluar">
-          <i class="fa-solid fa-minus-square"></i>
-        </span>
-      </td>
-    </tr>
-  `;
+  if (totalMasuk > 0) {
+    html += `
+      <tr class="line">
+        <td>Total uang</td>
+        <td class="end" id="totalUang">
+          ${formatAngka(totalUang)}
+        </td>
+        <td>
+          <span onclick="bukaModalRincian('keluar')"
+                class="btn btn-keluar">
+            <i class="fa-solid fa-minus-square"></i>
+          </span>
+        </td>
+      </tr>
+    `;
+  
 
   // Rincian utang dan modal
   data.filter(item => item.jenis === "keluar").forEach(item => {
@@ -853,7 +855,8 @@ async function tampilkanRincian() {
     `;
   });
 
-  // Untung kotor
+  // Untung kotor / bersih
+  if (totalKeluar > 0) {
   html += `
     <tr class="line">
       <td>Untung ${textUntung}</td>
@@ -868,6 +871,7 @@ async function tampilkanRincian() {
       </td>
     </tr>
   `;
+  }
 
   // Total pengeluaran
   data.filter(item => item.jenis === "pengeluaran").forEach(item => {
@@ -901,6 +905,8 @@ async function tampilkanRincian() {
       </tr>
     `;
   }
+    
+  } // if totalMasuk
 
   tbody.innerHTML = html;
 }
@@ -1750,6 +1756,15 @@ document.querySelector('[data-menu="kirimLaporan"]').addEventListener("click", (
   kirimLaporanWhatsApp();
 });
 
+document.querySelector('[data-menu="dukungan"]').addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
+  window.open('https://saweria.co/siapdan', '_blank');
+});
+
+document.querySelector("#dukunganRincian").addEventListener("click", () => {
+  document.querySelector('[data-menu="dukungan"]').click();
+});
+
 function ambilTeks(selector) {
   return document.querySelector(selector)
     .textContent.trim().replace(/\s+/g, " ");
@@ -1848,8 +1863,3 @@ if ("serviceWorker" in navigator) {
     }
   });
 }
-
-console.log("Data pengumuman:", daftarPengumuman);
-console.log("Tombol lonceng:", btnPengumuman);
-console.log("Badge lonceng:", badgePengumuman);
-console.log("Tempat daftar:", daftarPengumumanEl);

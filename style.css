@@ -1,3 +1,13 @@
+:root {
+  --red: hwb(0 2% 31%);
+  --white: hwb(0 100% 0%);
+  --blue: hwb(204 11% 20%);
+  --black: hwb(204 1% 80%);
+  --green: hwb(120 7% 38%);
+  --orange: hwb(43 7% 8%);
+  --black-5: rgba(0, 0, 0, 0.5);
+  --black-15: rgba(0, 0, 0, 0.15);
+}
 * {
   margin: 0;
   padding: 0;
@@ -7,7 +17,7 @@ body {
   font-size: 16px;
   font-family: sans-serif;
   color: #222;
-  background: #fff;
+  background: var(--white);
   padding-top: 40px;
 }
 
@@ -16,10 +26,10 @@ body {
   z-index: 900;
   bottom: 12px;
   right: 8px;
-  background: green;
+  background: var(--green);
   border-radius: 50%;
   border: 0;
-  box-shadow: 0 0 0 1px #fff, 0 0 4px 1px #000;
+  box-shadow: 0 0 0 1px var(--white), 0 0 4px 1px var(--black);
   width: 40px;
   height: 40px;
   display: flex;
@@ -27,12 +37,12 @@ body {
   justify-content: center;
 }
 .btn-add:hover, .btn-add:active {
-  background: #f00;
+  background: var(--red);
   transform: scale(0.9);
-  box-shadow: inset 0 0 8px #000;
+  box-shadow: inset 0 0 8px var(--black);
 }
 .btn-add i {
-  color: #fff;
+  color: var(--white);
   font-size: 18px;
 }
 
@@ -40,10 +50,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid var(--white);
   padding: 0 10px;
   height: 40px;
-  background: goldenrod;
+  background: var(--blue);
   position: fixed;
   top: 0;
   z-index: 999;
@@ -52,7 +62,7 @@ body {
 .header .title {
   text-align: center;
   font-size: 20px;
-  color: #fff;
+  color: var(--white);
 }
 
 #badgePengumuman {
@@ -60,7 +70,7 @@ body {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: red;
+  background: var(--red);
   border-radius: 50%;
   top: 6px;
   right: 9px;
@@ -79,7 +89,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 999;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--black-5);
   justify-content: center;
   align-items: center;
   padding: 15px;
@@ -88,7 +98,7 @@ body {
   display: flex;
 }
 #modalPengumuman .modal-content {
-  background: white;
+  background: var(--white);
   width: 100%;
   max-width: 450px;
   max-height: 80vh;
@@ -137,7 +147,7 @@ body {
   background: #f5f5f5;
 }
 .itemPengumuman.penting {
-  border-left: 4px solid #dc2626;
+  border-left: 4px solid var(--red);
 }
 .labelPengumuman {
   display: inline-block;
@@ -186,7 +196,7 @@ body {
   font-size: 22px;
   cursor: pointer;
   background: transparent;
-  color: #fff;
+  color: var(--white);
 }
 
 .dropdown-menu {
@@ -195,7 +205,7 @@ body {
   right: 0;
   width: 220px;
   padding: 6px;
-  background: white;
+  background: var(--white);
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,.15);
@@ -217,7 +227,7 @@ body {
   cursor: pointer;
   border-radius: 6px;
   text-transform: capitalize;
-  color: #08a;
+  color: var(--blue);
 }
 
 .dropdown-menu button:hover {
@@ -226,7 +236,7 @@ body {
 }
 
 .wrapper {
-  background: #fff;
+  background: var(--white)
 }
 
 .tables .tab-box {
@@ -240,7 +250,7 @@ body {
 }
 .tables h3 {
   text-align: center;
-  color: #fff;
+  color: var(--white);
   position: sticky;
   top: 0;
   left: 0;
@@ -255,7 +265,7 @@ body {
 .tables table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: var(--white);
 }
 .tables table:last-child {
   margin-bottom: 0;
@@ -268,8 +278,8 @@ body {
 .tables thead th {
   padding: 4px;
   border-bottom: 1px solid #ddd;
-  background: goldenrod;
-  color: #000;
+  background: var(--orange);
+  color: var(--black);
   font-size: 14px;
 }
 .tables tbody td {
@@ -304,11 +314,11 @@ body {
 }
 .tables thead th:nth-child(1),
 .tables thead th:last-of-type {
-  background: goldenrod;
+  background: var(--orange);
 }
 .tables tbody tr td:nth-child(1),
 .tables tbody tr td:last-of-type {
-  background: #fff;
+  background: var(--white);
 }
 .tables tbody tr:hover td:nth-child(1),
 .tables tbody tr:hover td:last-of-type {
@@ -323,7 +333,7 @@ body {
   background: #bbb;
 }
 .tables .footer {
-  background: goldenrod;
+  background: var(--orange);
   border: 0;
   padding: 4px;
   font-weight: 750;
@@ -345,23 +355,23 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fff;
+  background: var(--white);
   border-radius: 4px;
-  border: 1px solid green;
+  border: 1px solid var(--green);
 }
 .tables tbody td span:nth-child(2) {
-  border-color: #f00;
+  border-color: var(--red);
 }
 .tables tbody td span i {
   font-size: 18px;
-  color: green;
+  color: var(--green);
 }
 .tables tbody td span:nth-child(2) i {
-  color: #f00;
+  color: var(--red);
 }
 .tables tbody td span i:hover {
   border-style: inset;
-  background: #fff;
+  background: var(--white);
   scale: 0.8;
 }
 
@@ -369,7 +379,7 @@ body {
   margin: 10px 4px;
   padding: 0;
   display: none;
-  border: 2px solid goldenrod;
+  border: 2px solid var(--orange);
 }
 .rincian.show {
   display: block;
@@ -385,7 +395,7 @@ body {
   text-align: center;
   text-transform: capitalize;
   background: #242424;
-  color: #fff;
+  color: var(--white);
   padding: 8px;
 }
 .rincian table tr {
@@ -400,11 +410,11 @@ body {
   text-transform: capitalize;
 }
 .rincian table tr.line td {
-  background: goldenrod;
-  color: #fff;
+  background: var(--orange);
+  color: var(--white);
 }
 .rincian table tbody td:last-of-type {
-  padding: 6px 0 6px 6px;
+  padding: 6px;
   display: flex;
   justify-content: center;
   gap: 5px;
@@ -416,9 +426,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
+  background: var(--white);
   border-radius: 4px;
-  border: 1px solid green;
+  border: 1px solid var(--green);
 }
 .rincian table tbody span.btn-masuk,
 .rincian table tbody span.btn-keluar {
@@ -427,72 +437,84 @@ body {
   margin-top: -3px !important;
 }
 .rincian table tbody td:last-of-type span.btn-hapus {
-  background: #fff;
-  border-color: #f00;
+  background: var(--white);
+  border-color: var(--red);
 }
 .rincian table tbody td:last-of-type span.btn-hapus i {
-  color: #f00;
+  color: var(--red);
 }
 .rincian table tbody td:last-of-type i {
-  color: green;
+  color: var(--green);
   font-size: 18px;
 }
 .rincian table tbody td:last-of-type span:hover {
-  border-color: #000;
+  border-color: var(--black);
 }
 .rincian table tbody td:last-of-type i:hover {
-  color: #000;
+  color: var(--black);
 }
 .rincian table tbody td:last-of-type span.btn-hapus:hover i {
-  color: #000;
+  color: var(--black);
 }
 .rincian table tbody td:last-of-type .btn {
-  background: #fff;
-  border: 1px solid #08a;
+  background: var(--white);
+  border: 1px solid var(--blue);
   padding: 2px;
   border-radius: 0;
 }
 .rincian table tbody td:last-of-type .btn.btn-keluar {
-  border-color: #f00;
+  border-color: var(--red);
 }
 .rincian table tbody td:last-of-type .btn i {
-  color: #08a;
+  color: var(--blue);
   font-size: 14px;
 }
 .rincian table tbody td:last-of-type .btn.btn-keluar i {
-  color: #f00;
+  color: var(--red);
 }
 .rincian table tbody td:last-of-type .btn.btn-masuk:hover {
-  border-color: #f00;
+  border-color: var(--red);
 }
 .rincian table tbody td:last-of-type .btn:hover {
-  background: #f00;
+  background: var(--red);
 }
 .rincian table tbody td:last-of-type .btn:hover i {
-  color: #fff;
+  color: var(--white);
 }
 .rincian .finishing {
-  padding: 10px;
+  padding: 10px 10px 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
 }
+.rincian .finishing:last-of-type {
+  padding-bottom: 10px;
+}
 .rincian .finishing button {
   width: 100%;
   height: 40px;
-  background: #f00;
-  color: #fff;
+  background: var(--red);
+  color: var(--white);
   font-weight: 650;
 }
 .rincian .finishing button:last-of-type {
-  background: #08a;
+  background: var(--blue);
+}
+.rincian .finishing:last-of-type button {
+  background: transparent;
+  color: var(--blue);
+  border-color: transparent;
+  text-transform: capitalize;
+}
+.rincian .finishing:last-of-type button:hover {
+  color: var(--red);
 }
 
 .modal {
   position: fixed;
   width: 100%;
-  background: rgb(0, 0, 0, 0.5);
+  background: var(--black-5);
   left: 0;
   top: 0;
   bottom: 0;
@@ -507,7 +529,7 @@ body {
   width: 90%;
   max-width: 300px;
   padding: 12px 16px;
-  background: #fff;
+  background: var(--white);
   border-radius: 10px;
   left: 50%;
   top: 50px;
@@ -539,7 +561,7 @@ body {
   text-transform: capitalize;
 }
 .box label {
-  color: black;
+  color: var(--black);
   font-weight: 500;
 }
 .box h3 {
@@ -559,7 +581,7 @@ body {
   font-family: monospace;
 }
 .box input:focus, .box select:focus {
-  outline-color: #08a;
+  outline-color: var(--blue);
 }
 .box .col input {
   border-radius: 2px 0 0 2px;
@@ -569,7 +591,7 @@ body {
   border-radius: 0 2px 2px 0;
 }
 .box .col select {
-  background: #fff;
+  background: var(--white);
   border-radius: 2px 0 0 2px;
   appearance: none;
   -webkit-appearance: none;
@@ -577,7 +599,7 @@ body {
 }
 .box button {
   padding: 10px;
-  color: white;
+  color: var(--white);
   font-weight: 600;
   border-radius: 4px;
   border-color: #555;
@@ -586,10 +608,10 @@ body {
   background: #555;
 }
 .box button.clear {
-  background: darkgoldenrod;
+  background: var(--orange);
 }
 .box button.save {
-  background: #08a;
+  background: var(--blue);
 }
 
 #halamanBackup {
@@ -599,7 +621,7 @@ body {
 
 #halamanBackup .infoBackup {
   background: #daa520;
-  color: white;
+  color: var(--white);
   padding: 12px;
   text-align: center;
 }
@@ -614,7 +636,7 @@ body {
 
 #tutupBackup {
   background: transparent;
-  color: white;
+  color: var(--white);
   border: none;
   padding: 10px;
   font-size: 20px;
