@@ -1238,6 +1238,15 @@ async function buatBackup() {
 
     const sekarang = new Date();
 
+    const tanggal = sekarang.getDate();
+    const bulan = [
+      "JANUARI", "FEBRUARI", "MARET", "APRIL",
+      "MEI", "JUNI", "JULI", "AGUSTUS",
+      "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"
+    ][sekarang.getMonth()];
+    
+    const tahun = sekarang.getFullYear();
+    
     // Susun isi backup
     const dataBackup = {
       versi: 1,
@@ -1264,8 +1273,7 @@ async function buatBackup() {
     const url = URL.createObjectURL(file);
 
     // Nama file
-    const namaFile =
-      `Backup_HB_${sekarang.getDate()}-${sekarang.getMonth() + 1}-${sekarang.getFullYear()}.json`;
+    const namaFile = `HB_${tanggal}_${bulan}_${tahun}.json`;
 
     // Unduh file
     const link = document.createElement("a");
