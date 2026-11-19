@@ -482,14 +482,11 @@ body {
   color: var(--white);
 }
 .rincian .finishing {
-  padding: 10px 10px 0;
+  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-}
-.rincian .finishing:last-of-type {
-  padding-bottom: 10px;
 }
 .rincian .finishing button {
   width: 100%;
@@ -501,13 +498,18 @@ body {
 .rincian .finishing button:last-of-type {
   background: var(--blue);
 }
-.rincian .finishing:last-of-type button {
-  background: transparent;
-  color: var(--blue);
-  border-color: transparent;
-  text-transform: capitalize;
+
+.dukungan {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
-.rincian .finishing:last-of-type button:hover {
+.dukungan button {
+  background: var(--white);
+  color: var(--blue);
+  border: 0;
+}
+.dukungan button:hover {
   color: var(--red);
 }
 

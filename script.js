@@ -1303,13 +1303,10 @@ document.querySelector('[data-menu="hitung"]').addEventListener("click", () => {
   modalHitungUlang.classList.add("show", "max-top");
 });
 
-
 document.querySelector('[data-menu="backup"]').addEventListener("click", () => {
   dropdownMenu.classList.remove("show");
-  //buatBackup();
   modalBackupData.classList.add("show", "max-top");
 });
-
 
 // MEMBACA FILE BACKUP
 const fileBackup = document.querySelector("#fileBackup");

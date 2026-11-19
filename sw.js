@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "hitung-barang-v1.21";
+const CACHE_NAME = "hitung-barang-v1.22";
 
 const FILES_TO_CACHE = [
   "./",
@@ -8,7 +8,7 @@ const FILES_TO_CACHE = [
   "./script.js",
   "./pengumuman.js",
   "./manifest.json",
-  "./og-hb-toko.png",
+  "./og-pw-hb-toko.png",
   "./icons/icon-48.png",
   "./icons/icon-96.png",
   "./icons/icon-192.png",
