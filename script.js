@@ -670,6 +670,46 @@ semuaKolom.forEach((kolom, index) => {
 
 });
 
+const toggleAuto = document.querySelector("#toggleAuto") ;
+const dataStatus = document.querySelector('[data-status]');
+const toggleIcon = document.querySelector("#toggleIcon");
+
+let kolomSebelumnya;
+
+toggleAuto.addEventListener("mousedown", () => {
+  kolomSebelumnya = document.activeElement;
+});
+
+toggleAuto.addEventListener("click", () => {
+  toggleOnOff();
+  kolomSebelumnya?.focus();
+});
+
+const cekStatusToggle = localStorage.getItem("autoModalProduk");
+if (cekStatusToggle && cekStatusToggle === "aktif") {
+  dataStatus.dataset.status = "on";
+  toggleIcon.classList.remove("fa-solid", "fa-toggle-off");
+  toggleIcon.classList.add("fa-solid", "fa-toggle-on");
+} else {
+  dataStatus.dataset.status = "off";
+  toggleIcon.classList.remove("fa-solid", "fa-toggle-on");
+  toggleIcon.classList.add("fa-solid", "fa-toggle-off");
+}
+
+function toggleOnOff() {
+  if (dataStatus.dataset.status === "off") {
+    dataStatus.dataset.status = "on";
+    toggleIcon.classList.remove("fa-solid", "fa-toggle-off");
+    toggleIcon.classList.add("fa-solid", "fa-toggle-on");
+    localStorage.setItem("autoModalProduk", "aktif");
+  } else {
+    dataStatus.dataset.status = "off";
+    toggleIcon.classList.remove("fa-solid", "fa-toggle-on");
+    toggleIcon.classList.add("fa-solid", "fa-toggle-off");
+    localStorage.removeItem("autoModalProduk");
+  }
+}
+
 // simpan produk
 async function simpanProduk(data) {
   const transaksi = db.transaction("produk", "readwrite");
@@ -682,7 +722,32 @@ async function simpanProduk(data) {
     request = store.put(data);
   } else {
     request = store.add(data);
-    setTimeout(() => btnOpen.click(), 2500);
+    
+    const tanggalHitung = localStorage.getItem("tanggalPenghitungan");
+    const autoModalProduk = localStorage.getItem("autoModalProduk");
+    
+    if (tanggalHitung === null) {
+      const sekarang = new Date();
+      const tanggalLokal =
+        sekarang.getFullYear() + "-" +
+        String(sekarang.getMonth() + 1).padStart(2, "0") + "-" +
+        String(sekarang.getDate()).padStart(2, "0");
+      
+      localStorage.setItem(
+        "tanggalPenghitungan",
+        tanggalLokal
+      );
+    }
+    
+    if (autoModalProduk && autoModalProduk === "aktif") {
+      const btnAdd = document.querySelector(".btn-add");
+      btnAdd.style.display = "none";
+      setTimeout(() => {
+        btnAdd.display = "flex";
+        btnOpen.click();
+      }, 2500);
+    }
+    
   }
 
   return new Promise((resolve, reject) => {
@@ -1502,7 +1567,7 @@ menuBackup.addEventListener("click", async () => {
   dropdownMenu.classList.remove("show");
   const produk = await ambilSemuaProduk();
   if (produk.length === 0) {
-    modalAlert("Tidak ada data", "Tidak ada data yang tersedia untuk diproses lebih lanjut!", "Tutup");
+    modalAlert("Data kosong!", "Tidak ada data yang tersedia untuk diproses lebih lanjut!", "Tutup");
   } else {
     modalBackupData.classList.add("show", "max-top");
   }

@@ -53,12 +53,20 @@
           Kirim laporan
         </button>
         <button data-menu="bantuan" type="button">
-          <i class="fa-brands fa-whatsapp"></i>
+          <i class="fa-solid fa-message"></i>
           Bantuan
         </button>
+        <button data-menu="dokumentasi" type="button">
+          <i class="fa-solid fa-book-open"></i>
+          Dokumentasi
+          </button>
         <button data-menu="dukungan" type="button">
           <i class="fa-solid fa-gift"></i>
           Dukungan anda
+        </button>
+        <button data-menu="laporkan" type="button">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          Laporkan masalah
         </button>
       </div>
     </div>
@@ -148,6 +156,14 @@
           <div class="col">
             <input type="text" id="kemasan" enterkeyhint="next">
             <input type="text" id="banyak" enterkeyhint="next">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col on-off">
+          <label for="autoModal">Otomatis buka/tutup</label>
+          <span id="toggleAuto" data-status="off">
+            <i id="toggleIcon" class="fa-solid fa-toggle-off"></i>
+          </span>
           </div>
         </div>
         <div class="row center mt-20">

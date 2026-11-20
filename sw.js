@@ -1,7 +1,7 @@
 
-const CACHE_NAME = "hitung-barang-v1.25";
+const CACHE_NAME = "hitung-barang-v1.2";
 
-const FILES_TO_CACHE = [/*
+const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./style.css",
@@ -12,7 +12,7 @@ const FILES_TO_CACHE = [/*
   "./icons/icon-48.png",
   "./icons/icon-96.png",
   "./icons/icon-192.png",
-  "./icons/icon-512.png"*/
+  "./icons/icon-512.png"
 ];
 
 // Memasang Service Worker dan menyimpan file aplikasi
