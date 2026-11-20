@@ -17,7 +17,7 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
 </head>
 <body>
@@ -70,8 +70,8 @@
       <div id="tables" class="tables"></div>
     </div>
 
-    <div class="dukungan">
-      <button id="dukunganRincian" type="button">
+    <div id="dukunganRincian" class="dukungan">
+      <button type="button">
         <i class="fa-solid fa-gift"></i>
         Kirim dukungan anda
       </button>
@@ -163,7 +163,7 @@
         </div>
       </div>
     </div>
-    
+      
     <div id="modalHapus" class="modal">
       <div class="box">
         <div class="row">
@@ -217,10 +217,10 @@
     <div id="modalHitungUlang" class="modal">
       <div class="box">
         <div class="row">
-          <h3>Konfirmasi</h3>
+          <h3>Konfirmasi hitung ulang</h3>
         </div>
         <div class="row">
-          <p>Tindakan ini hanya mengosongkan data untuk hitung ulang tanpa backup data!</p>
+          <p>Tindakan ini akan mengosongkan data saat ini untuk memulai hitung ulang!</p>
         </div>
         <div class="row center mt-20">
           <button id="batalHitungUlang" class="close">Batal</button>
@@ -235,7 +235,7 @@
           <h3>Konfirmasi</h3>
         </div>
         <div class="row">
-          <p>Tindakan ini akan membackup data sekaligus mengosongkan seluruh data saat ini!</p>
+          <p>Tindakan ini akan membackup data saat ini, akan disimpan sebagai file JSON untuk dibuka kembali kapan saja!</p>
         </div>
         <div class="row center mt-20">
           <button id="batalBackupData" class="close">Batal</button>
@@ -300,8 +300,8 @@
   
   </div>
   
-  <script src="pengumuman.js?v=2"></script>
-  <script src="script.js?v=2"></script>
+  <script src="pengumuman.js"></script>
+  <script src="script.js"></script>
   
 </body>
 </html>

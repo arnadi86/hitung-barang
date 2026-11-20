@@ -500,14 +500,18 @@ body {
 }
 
 .dukungan {
-  display: flex;
+  display: none;
   justify-content: center;
   margin-top: 10px;
+}
+.dukungan.show {
+  display: flex;
 }
 .dukungan button {
   background: var(--white);
   color: var(--blue);
   border: 0;
+  text-transform: capitalize;
 }
 .dukungan button:hover {
   color: var(--red);

@@ -70,6 +70,37 @@ async function tambahProduk(data) {
 }
 
 // ambil semua produk
+// kode baru
+async function ambilSemuaProduk() {
+
+  // Pastikan database sudah dibuka
+  if (!db) {
+    await bukaDatabase();
+  }
+
+  const transaksi = db.transaction(
+    "produk",
+    "readonly"
+  );
+
+  const store = transaksi.objectStore("produk");
+
+  const request = store.getAll();
+
+  return new Promise((resolve, reject) => {
+
+    request.onsuccess = () => {
+      resolve(request.result);
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+
+  });
+
+}
+/** kode lama
 async function ambilSemuaProduk() {
 
   const transaksi = db.transaction(
@@ -94,8 +125,59 @@ async function ambilSemuaProduk() {
   });
 
 }
+*/
+
+/*
+modalAlert = document.querySelector("#modalAlert");
+tutupAlert = document.querySelector("#tutupAlert");
+tutupAlert.addEventListener("click", () => {
+  modalAlert.classList.remove("show", "max-top");
+});*/
+
+// modal alert
+function modalAlert(teksJudul, teksPesan, teksTombol) {
+  const modal = document.createElement("div");
+  const box = document.createElement("div");
+  const row1 = document.createElement("div");
+  const row2 = document.createElement("div");
+  const row3 = document.createElement("div");
+  const judul = document.createElement("h3");
+  const pesan = document.createElement("p");
+  const tombol = document.createElement("button");
+
+  modal.classList.add("modal", "show", "max-top");
+  box.classList.add("box");
+  row1.classList.add("row");
+  row2.classList.add("row");
+  row3.classList.add("row", "center", "mt-20");
+  tombol.classList.add("close");
+  
+  judul.textContent = teksJudul;
+  pesan.textContent = teksPesan;
+  tombol.textContent = teksTombol;
+
+  row1.appendChild(judul);
+  row2.appendChild(pesan);
+  row3.appendChild(tombol);
+  box.appendChild(row1);
+  box.appendChild(row2);
+  box.appendChild(row3);
+  modal.appendChild(box);
+  document.body.appendChild(modal);
+
+  tombol.addEventListener("click", () => {
+    modal.remove();
+  });
+}
 
 const tabelRincian = document.querySelector("#tabelRincian");
+const menuHitung = document.querySelector('[data-menu="hitung"]');
+const menuLihatBackup = document.querySelector('[data-menu="lihatBackup"]');
+const menuBackup = document.querySelector('[data-menu="backup"]');
+const menuKirimLaporan = document.querySelector('[data-menu="kirimLaporan"]');
+const menuBantuan = document.querySelector('[data-menu="bantuan"]');
+const menuDukungan = document.querySelector('[data-menu="dukungan"');
+const dukunganRincian = document.querySelector("#dukunganRincian");
 const starting = document.querySelector("#starting");
 // tampilkan produk
 let produkTerbaruId = null;
@@ -256,10 +338,12 @@ async function tampilkanProduk() {
   const totalBeras = await hitungTotalBeras();
 
   if (totalBeras === 0) {
+    dukunganRincian.classList.remove("show");
+    tabelRincian.classList.remove("show");
     starting.classList.add("show");
-    tabelRincian.classList.remove("show")
   } else {
     starting.classList.remove("show")
+    dukunganRincian.classList.add("show");
     tabelRincian.classList.add("show");
   }
 
@@ -367,7 +451,7 @@ async function ambilProdukById(id) {
 async function hitungTotalBeras() {
 
   const data = await ambilSemuaProduk();
-console.log("data: ", data)
+
   const totalBeras = data.reduce(
     (total, produk) => {
       let ukuranAsli;
@@ -1153,11 +1237,36 @@ document.querySelector("#konfirmasiHitungUlang").addEventListener("click", () =>
   modalHitungUlang.classList.remove("show", "max-top");
 });
 document.querySelector("#konfirmasiBackupData").addEventListener("click", () => {
-  hitungUlangBackup();
+  buatBackup();
   modalBackupData.classList.remove("show", "max-top");
 });
 
 // hitung ulang
+// kode baru
+async function hitungUlang() {
+  await resetProduk();
+  await resetRincian();
+
+  localStorage.removeItem("tanggalPenghitungan");
+
+  // Simpan tanggal penghitungan baru
+  const sekarang = new Date();
+
+  const tanggalLokal =
+    sekarang.getFullYear() + "-" +
+    String(sekarang.getMonth() + 1).padStart(2, "0") + "-" +
+    String(sekarang.getDate()).padStart(2, "0");
+
+  localStorage.setItem(
+    "tanggalPenghitungan",
+    tanggalLokal
+  );
+
+  await tampilkanProduk();
+  await hitungTotalBeras();
+  await tampilkanRincian();
+}
+/** kode lama
 async function hitungUlang() {
   await resetProduk();
   await resetRincian();
@@ -1165,12 +1274,7 @@ async function hitungUlang() {
   await hitungTotalBeras();
   await tampilkanRincian();
 }
-
-// hitung ulang + backup data
-async function hitungUlangBackup() {
-  buatBackup();
-  setTimeout(() => hitungUlang(), 1000);
-}
+*/
 
 // hapus semua produk
 async function resetProduk() {
@@ -1228,6 +1332,96 @@ async function resetRincian() {
 
 // bagian backup
 // MEMBUAT FILE BACKUP
+// kode baru
+async function buatBackup() {
+
+  try {
+
+    // Ambil tanggal penghitungan
+    const tanggalPenghitungan = localStorage.getItem(
+      "tanggalPenghitungan"
+    );
+
+    if (!tanggalPenghitungan) {
+      alert("Tanggal penghitungan belum tersedia!");
+      return;
+    }
+
+    // Ambil data dari IndexedDB
+    const produk = await ambilSemuaProduk();
+    const rincian = await ambilSemuaRincian();
+
+    // Tanggal backup (waktu sekarang)
+    const sekarang = new Date();
+
+    const tanggalBackup =
+      sekarang.getFullYear() + "-" +
+      String(sekarang.getMonth() + 1).padStart(2, "0") + "-" +
+      String(sekarang.getDate()).padStart(2, "0");
+
+    // Pecah tanggal penghitungan
+    const [tahun, bulan, tanggal] =
+      tanggalPenghitungan.split("-");
+
+    const namaBulan = [
+      "JANUARI", "FEBRUARI", "MARET", "APRIL",
+      "MEI", "JUNI", "JULI", "AGUSTUS",
+      "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"
+    ];
+
+    // Susun isi backup
+    const dataBackup = {
+      versi: 1,
+
+      tanggalPenghitungan: tanggalPenghitungan,
+      tanggalBackup: tanggalBackup,
+
+      tanggal: sekarang.getDate(),
+      bulan: sekarang.getMonth() + 1,
+      tahun: sekarang.getFullYear(),
+
+      produk: produk,
+      rincian: rincian
+    };
+
+    // Ubah menjadi JSON
+    const isiJSON = JSON.stringify(dataBackup, null, 2);
+
+    // Buat file
+    const file = new Blob(
+      [isiJSON],
+      { type: "application/json" }
+    );
+
+    const url = URL.createObjectURL(file);
+
+    // Nama file berdasarkan tanggal penghitungan
+    const namaFile =
+      `HB_${tanggal}_${namaBulan[Number(bulan) - 1]}_${tahun}.json`;
+
+    // Unduh file
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = namaFile;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(url);
+
+    alert("Backup berhasil dibuat!");
+
+  } catch (error) {
+
+    console.error(error);
+    alert("Gagal membuat backup!");
+
+  }
+
+}
+/** kode lama
 async function buatBackup() {
 
   try {
@@ -1297,15 +1491,21 @@ async function buatBackup() {
   }
 
 }
+*/
 
-document.querySelector('[data-menu="hitung"]').addEventListener("click", () => {
+menuHitung.addEventListener("click", () => {
   dropdownMenu.classList.remove("show");
   modalHitungUlang.classList.add("show", "max-top");
 });
 
-document.querySelector('[data-menu="backup"]').addEventListener("click", () => {
+menuBackup.addEventListener("click", async () => {
   dropdownMenu.classList.remove("show");
-  modalBackupData.classList.add("show", "max-top");
+  const produk = await ambilSemuaProduk();
+  if (produk.length === 0) {
+    modalAlert("Tidak ada data", "Tidak ada data yang tersedia untuk diproses lebih lanjut!", "Tutup");
+  } else {
+    modalBackupData.classList.add("show", "max-top");
+  }
 });
 
 // MEMBACA FILE BACKUP
@@ -1315,7 +1515,7 @@ const halamanBackup = document.querySelector("#halamanBackup");
 let dataBackupAktif = null;
 
 // Ketika menu Lihat Backup ditekan
-document.querySelector('[data-menu="lihatBackup"]').addEventListener("click", () => {
+menuLihatBackup.addEventListener("click", () => {
   dropdownMenu.classList.remove("show");
   fileBackup.click();
 });
@@ -1739,7 +1939,7 @@ document.querySelector("#tutupBackup").addEventListener("click", () => {
 // 1. Hubungi WhatsApp
 const nomorWhatsApp = "6281285242366";
 
-document.querySelector('[data-menu="bantuan"]').addEventListener("click", () => {
+menuBantuan.addEventListener("click", () => {
   dropdownMenu.classList.remove("show");
   kirimWhatsApp();
 });
@@ -1756,18 +1956,18 @@ function kirimWhatsApp() {
 }
 
 // 2. Kirim laporan toko
-document.querySelector('[data-menu="kirimLaporan"]').addEventListener("click", () => {
+menuKirimLaporan.addEventListener("click", () => {
   dropdownMenu.classList.remove("show");
   kirimLaporanWhatsApp();
 });
 
-document.querySelector('[data-menu="dukungan"]').addEventListener("click", () => {
+menuDukungan.addEventListener("click", () => {
   dropdownMenu.classList.remove("show");
   window.open('https://saweria.co/siapdan', '_blank');
 });
 
-document.querySelector("#dukunganRincian").addEventListener("click", () => {
-  document.querySelector('[data-menu="dukungan"]').click();
+document.querySelector("#dukunganRincian button").addEventListener("click", () => {
+  menuDukungan.click();
 });
 
 function ambilTeks(selector) {
@@ -1855,9 +2055,53 @@ window.addEventListener("load", () => {
   }, 500);
 });
 
+// kode baru
+// Mendeteksi apakah aplikasi dibuka melalui Acode
+const modePengembangan =
+  location.hostname === "localhost" ||
+  location.hostname === "127.0.0.1";
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
 
+    try {
 
+      if (modePengembangan) {
+
+        // Matikan Service Worker saat pengembangan
+        const registrasi =
+          await navigator.serviceWorker.getRegistration();
+
+        if (registrasi) {
+          await registrasi.unregister();
+        }
+
+        // Hapus cache khusus HB Toko
+        const daftarCache = await caches.keys();
+
+        await Promise.all(
+          daftarCache
+            .filter(nama => nama.startsWith("hitung-barang-"))
+            .map(nama => caches.delete(nama))
+        );
+
+        console.log("Mode pengembangan: Cache dinonaktifkan.");
+
+        return;
+      }
+
+      // Service Worker tetap aktif di GitHub Pages
+      await navigator.serviceWorker.register("./sw.js");
+
+      console.log("Service Worker berhasil didaftarkan!");
+
+    } catch (error) {
+      console.error("Pengaturan Service Worker gagal:", error);
+    }
+
+  });
+}
+/** kode lama
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
@@ -1868,3 +2112,4 @@ if ("serviceWorker" in navigator) {
     }
   });
 }
+*/
