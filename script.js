@@ -175,6 +175,7 @@ const menuBackup = document.querySelector('[data-menu="backup"]');
 const menuKirimLaporan = document.querySelector('[data-menu="kirimLaporan"]');
 const menuBantuan = document.querySelector('[data-menu="bantuan"]');
 const menuDukungan = document.querySelector('[data-menu="dukungan"]');
+const menuPanduan = document.querySelector('[data-menu="panduan"]');
 const menuDokumentasi = document.querySelector('[data-menu="dokumentasi"]');
 const menuLaporkan = document.querySelector('[data-menu="laporkan"]');
 const dukunganRincian = document.querySelector("#dukunganRincian");
@@ -2323,6 +2324,7 @@ cekStatusInstal();
 
 // bagian laporkan masalah
 menuLaporkan.addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
   tampilkanModalMasalah();
 });
 
@@ -2411,8 +2413,438 @@ function tampilkanModalMasalah() {
 }
 
 
+// bagian panduan pengguna
+menuPanduan.addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
+  tampilkanPanduan();
+});
+
+document.addEventListener("click", (event) => {
+  const tombol = event.target.closest(
+    '[data-panduan="mengenal"]'
+  );
+  
+  if (!tombol) return;
+  
+  tampilkanIsiPanduan(
+    "Mengenal HB Toko",
+    `
+      <p>
+        HB Toko adalah aplikasi untuk membantu
+        menghitung barang dan mencatat rincian
+        keuangan toko.
+      </p>
+      
+      <h4>Tampilan aplikasi</h4>
+      
+      <div class="gambarPanduan">
+        <img
+          src="./images/panduan/tampilan-aplikasi.jpg"
+          alt="Tampilan aplikasi HB Toko"
+        >
+      </div>
+      
+      <p>
+        Aplikasi ini (HB Toko) dirancang dan
+        dikembangkan khusus untuk toko beras
+        yang dapat memudahkan urusan rincian
+        keuangan bulanan.
+      </p>
+      
+      <h4>Video pengenalan HB Toko</h4>
+
+      <div class = "videoPanduan" >
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/Fr1b6tTvUD4?controls=1&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1"
+          title="Tutorial HB Toko"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      
+      <p>
+        HB Toko ringan dan praktis dapat diakses
+        via website dan juga ikon aplikasi yang
+        terinstal.
+      </p>
+    `
+  );
+});
+
+document.addEventListener("click", (event) => {
+  const tombol = event.target.closest(
+    '[data-panduan="barang"]'
+  );
+  
+  if (!tombol) return;
+  
+  tampilkanIsiPanduan(
+    "Mengelola Data Barang",
+    `
+      <p>
+        Pada bagian ini, kamu dapat mempelajari
+        cara mengelola data barang di aplikasi HB Toko.
+      </p>
+
+      <h4>1. Menambahkan Data Barang</h4>
+
+      <p>
+        Gunakan tombol tambah (+) untuk membuka
+        formulir penambahan barang.
+      </p>
+
+      <p>
+        Isi data barang sesuai kolom yang tersedia,
+        seperti merek, ukuran, modal, kemasan,
+        dan jumlah.
+      </p>
+
+      <p>
+        Setelah semua data diisi, tekan tombol Simpan.
+        Data yang berhasil disimpan akan ditampilkan
+        pada tabel barang.
+      </p>
+
+      <hr>
+
+      <h4>2. Mengubah Data Barang</h4>
+
+      <p>
+        Jika terdapat kesalahan atau perubahan data,
+        tekan tombol Edit pada baris barang yang ingin
+        diperbaiki.
+      </p>
+
+      <p>
+        Sesuaikan informasi yang diperlukan,
+        kemudian simpan perubahan.
+      </p>
+
+      <hr>
+
+      <h4>3. Menghapus Data Barang</h4>
+
+      <p>
+        Tekan tombol Hapus pada barang yang ingin
+        dihapus. Periksa kembali barang yang dipilih
+        sebelum mengonfirmasi penghapusan.
+      </p>
+
+      <hr>
+
+      <h4>4. Memahami Tabel Barang</h4>
+
+      <p>
+        Data barang ditampilkan dalam tabel dan
+        dikelompokkan berdasarkan ukuran agar
+        lebih mudah dibaca dan dikelola.
+      </p>
+    `
+  );
+});
+
+document.addEventListener("click", (event) => {
+  const tombol = event.target.closest(
+    '[data-panduan="keuangan"]'
+  );
+  
+  if (!tombol) return;
+  
+  tampilkanIsiPanduan(
+    "Rincian Keuangan",
+    `
+      <p>
+        Menu Rincian Keuangan membantu pengguna
+        melihat informasi keuangan berdasarkan
+        data yang dicatat dalam aplikasi HB Toko.
+      </p>
+
+      <h4>1. Melihat Rincian Keuangan</h4>
+
+      <p>
+        Buka bagian Rincian Keuangan untuk melihat
+        ringkasan dan catatan keuangan dari aktivitas
+        pencatatan barang.
+      </p>
+
+      <h4>2. Memahami Catatan Transaksi</h4>
+
+      <p>
+        Setiap catatan transaksi ditampilkan berdasarkan
+        jenisnya, sehingga pengguna dapat membedakan
+        transaksi masuk dan transaksi lainnya.
+      </p>
+
+      <h4>3. Memeriksa Total Keuangan</h4>
+
+      <p>
+        Perhatikan nilai total yang ditampilkan untuk
+        membantu memeriksa hasil pencatatan.
+      </p>
+
+      <h4>4. Memeriksa Riwayat</h4>
+
+      <p>
+        Periksa kembali catatan yang sudah tersimpan
+        agar pencatatan keuangan tetap sesuai dengan
+        aktivitas toko.
+      </p>
+    `
+  );
+});
+
+document.addEventListener("click", (event) => {
+  const tombol = event.target.closest(
+    '[data-panduan="backup"]'
+  );
+  
+  if (!tombol) return;
+  
+  tampilkanIsiPanduan(
+    "Backup dan Pemulihan Data",
+    `
+      <p>
+        HB Toko menyediakan fitur backup dan
+        pemulihan data untuk membantu pengguna
+        menjaga keamanan data aplikasi.
+      </p>
+
+      <h4>1. Apa itu Backup Data?</h4>
+
+      <p>
+        Backup adalah proses membuat salinan data
+        aplikasi ke dalam sebuah file JSON.
+        File tersebut dapat disimpan sebagai
+        cadangan jika suatu saat diperlukan.
+      </p>
+
+      <h4>2. Cara Membuat Backup</h4>
+
+      <p>
+        Buka menu Backup Data, kemudian ikuti
+        petunjuk untuk membuat dan menyimpan
+        file cadangan ke perangkat.
+      </p>
+
+      <p>
+        Simpan file backup di tempat yang aman.
+        Sebaiknya buat backup secara berkala.
+      </p>
+
+      <h4>3. Apa itu Pemulihan Data?</h4>
+
+      <p>
+        Pemulihan data adalah proses memasukkan
+        kembali data dari file backup ke aplikasi
+        HB Toko.
+      </p>
+
+      <h4>4. Cara Memulihkan Data</h4>
+
+      <p>
+        Pilih menu Pemulihan Data, kemudian pilih
+        file backup JSON yang sebelumnya sudah
+        disimpan.
+      </p>
+
+      <p>
+        Periksa file yang dipilih dan ikuti
+        petunjuk konfirmasi sebelum melanjutkan
+        proses pemulihan.
+      </p>
+
+      <h4>5. Hal yang Perlu Diperhatikan</h4>
+
+      <p>
+        Pastikan file backup berasal dari aplikasi
+        HB Toko dan jangan mengubah isi file JSON
+        secara sembarangan.
+      </p>
+
+      <p>
+        Sebelum melakukan pemulihan, sebaiknya
+        buat backup data terbaru agar data yang
+        sedang digunakan tetap memiliki salinan.
+      </p>
+    `
+  );
+});
+
+document.addEventListener("click", (event) => {
+  const tombol = event.target.closest(
+    '[data-panduan="instalasi"]'
+  );
+  
+  if (!tombol) return;
+  
+  tampilkanIsiPanduan(
+    "Instalasi Aplikasi HB Toko",
+    `
+      <p>
+        HB Toko dapat dipasang pada perangkat
+        sebagai aplikasi melalui browser yang
+        mendukung fitur instalasi PWA.
+      </p>
+
+      <h4>1. Buka Aplikasi HB Toko</h4>
+
+      <p>
+        Buka alamat aplikasi HB Toko melalui
+        browser Google Chrome.
+      </p>
+
+      <h4>2. Pilih Instal Aplikasi</h4>
+
+      <p>
+        Tekan tombol Instal Aplikasi yang tersedia
+        pada aplikasi, kemudian ikuti petunjuk
+        instalasi yang muncul.
+      </p>
+
+      <h4>3. Tunggu Proses Instalasi</h4>
+
+      <p>
+        Tunggu hingga proses instalasi selesai.
+        Setelah berhasil, ikon HB Toko akan
+        tersedia pada layar utama perangkat.
+      </p>
+
+      <h4>4. Buka HB Toko</h4>
+
+      <p>
+        Tekan ikon HB Toko pada layar utama
+        untuk menjalankan aplikasi.
+      </p>
+
+      <h4>5. Keuntungan Memasang Aplikasi</h4>
+
+      <ul>
+        <li>Lebih mudah dibuka melalui layar utama.</li>
+        <li>Tampilan lebih menyerupai aplikasi.</li>
+        <li>Tidak perlu mengetik alamat website setiap kali digunakan.</li>
+      </ul>
+
+      <p>
+        <strong>Catatan:</strong>
+        Ketersediaan pilihan instalasi bergantung
+        pada browser dan perangkat yang digunakan.
+      </p>
+    `
+  );
+});
+
+function tampilkanIsiPanduan(judul, isi) {
+  // Cegah modal bagian dibuat berulang
+  if (document.querySelector("#modalIsiPanduan")) return;
+  
+  const modal = document.createElement("div");
+  
+  modal.id = "modalIsiPanduan";
+  modal.className = "modal show";
+  
+  modal.style.zIndex = "1001";
+  
+  modal.innerHTML = `
+    <div class="box">
+
+      <div class="row">
+        <h3>${judul}</h3>
+      </div>
+
+      <div class="row auto-y">
+        ${isi}
+      </div>
+
+      <div class="row center mt-20">
+        <button type="button" id="kembaliPanduan" class="close">
+          Kembali
+        </button>
+      </div>
+
+    </div>
+  `;
+  
+  document.body.append(modal);
+  
+  modal.querySelector("#kembaliPanduan")
+    .addEventListener("click", () => {
+      modal.remove();
+    });
+}
+
+function tampilkanPanduan() {
+  // Cegah modal dibuat berulang kali
+  if (document.querySelector("#modalPanduan")) return;
+  
+  const modal = document.createElement("div");
+  
+  modal.id = "modalPanduan";
+  modal.className = "modal show";
+  
+  modal.innerHTML = `
+    <div class="box">
+
+      <div class="row">
+        <h3>Panduan Pengguna HB Toko</h3>
+      </div>
+
+      <div class="row auto-y">
+
+        <p>
+          Selamat datang di panduan penggunaan HB Toko.
+          Silakan pilih bagian yang ingin dipelajari.
+        </p>
+
+        <button type="button" data-panduan="mengenal">
+          Mengenal HB Toko
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <button type="button" data-panduan="barang">
+          Mengelola Data Barang
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <button type="button" data-panduan="keuangan">
+          Rincian Keuangan
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <button type="button" data-panduan="backup">
+          Backup dan Pemulihan Data
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <button type="button" data-panduan="instalasi">
+          Instalasi Aplikasi
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+      </div>
+
+      <div class="row center mt-20">
+        <button type="button" id="tutupPanduan" class="close">
+          Tutup
+        </button>
+      </div>
+
+    </div>
+  `;
+  
+  document.body.append(modal);
+  
+  modal.querySelector("#tutupPanduan")
+    .addEventListener("click", () => {
+      modal.remove();
+    });
+}
+
+
 // bagian dokumentasi
 menuDokumentasi.addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
   tampilkanDokumentasi();
 });
 
@@ -2429,10 +2861,12 @@ function tampilkanDokumentasi() {
       <div class="row">
         <h3>Dokumentasi</h3>
       </div>
-
+      
       <div class="row auto-y">
+        <h4 style="margin-bottom: 10px">Aplikasi Khusus Toko Beras</h4>
+        
         <p>HB Toko adalah aplikasi Hitung Barang yang dirancang untuk membantu pengguna mencatat, mengelola, dan menghitung data barang dengan mudah, praktis, dan terorganisir melalui browser maupun perangkat mobile.</p>
-
+        
         <p>Aplikasi ini membantu proses pencatatan barang berdasarkan merek, ukuran, modal, kemasan, dan jumlah. Setiap data yang dimasukkan dapat dikelola sehingga pengguna lebih mudah memantau barang yang sedang dihitung.</p>
 
         <p>HB Toko dilengkapi dengan fitur pengelolaan data barang, penghitungan jumlah dan nilai modal, serta penyajian rincian keuangan untuk membantu pengguna mengetahui total perhitungan barang.</p>
