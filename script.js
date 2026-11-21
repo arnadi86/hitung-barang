@@ -177,6 +177,7 @@ const menuBantuan = document.querySelector('[data-menu="bantuan"]');
 const menuDukungan = document.querySelector('[data-menu="dukungan"]');
 const menuPanduan = document.querySelector('[data-menu="panduan"]');
 const menuDokumentasi = document.querySelector('[data-menu="dokumentasi"]');
+const menuTentang = document.querySelector('[data-menu="tentang"]');
 const menuLaporkan = document.querySelector('[data-menu="laporkan"]');
 const dukunganRincian = document.querySelector("#dukunganRincian");
 const starting = document.querySelector("#starting");
@@ -2841,6 +2842,83 @@ function tampilkanPanduan() {
     });
 }
 
+// bagian tentang
+menuTentang.addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
+  tampilkanTentang();
+});
+
+function tampilkanTentang() {
+  if (document.querySelector("#modalTentang")) return;
+  
+  const modal = document.createElement("div");
+  
+  modal.id = "modalTentang";
+  modal.className = "modal show";
+  
+  modal.innerHTML = `
+    <div class="box">
+
+      <div class="row">
+        <h3>Tentang HB Toko</h3>
+      </div>
+
+      <div class="row auto-y">
+
+        <div class="center">
+          <h2>HB Toko</h2>
+          <p>Aplikasi Hitung Barang</p>
+          <small>Versi 1.0.0</small>
+        </div>
+
+        <hr>
+
+        <h4>Tentang Aplikasi</h4>
+
+        <p>
+          HB Toko merupakan aplikasi yang dirancang
+          untuk membantu toko dalam menghitung barang
+          dan mengelola pencatatan keuangan.
+        </p>
+
+        <h4>Informasi Pengembang</h4>
+
+        <p>
+          Dikembangkan untuk membantu mempermudah
+          aktivitas pencatatan dan pengelolaan barang
+          toko.
+        </p>
+
+        <h4>Penyimpanan Data</h4>
+
+        <p>
+          Data aplikasi disimpan secara lokal
+          pada perangkat atau browser pengguna.
+          Pengguna disarankan melakukan backup
+          secara berkala.
+        </p>
+
+      </div>
+
+      <div class="row center mt-20">
+        <button
+          type="button"
+          id="tutupTentang"
+          class="close">
+          Tutup
+        </button>
+      </div>
+
+    </div>
+  `;
+  
+  document.body.append(modal);
+  
+  modal.querySelector("#tutupTentang")
+    .addEventListener("click", () => {
+      modal.remove();
+    });
+}
 
 // bagian dokumentasi
 menuDokumentasi.addEventListener("click", () => {

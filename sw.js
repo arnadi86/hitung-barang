@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "hitung-barang-v1.24";
+const CACHE_NAME = "hitung-barang-v1.0.0";
 
 const FILES_TO_CACHE = [
   "./",
