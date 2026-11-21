@@ -174,7 +174,9 @@ const menuLihatBackup = document.querySelector('[data-menu="lihatBackup"]');
 const menuBackup = document.querySelector('[data-menu="backup"]');
 const menuKirimLaporan = document.querySelector('[data-menu="kirimLaporan"]');
 const menuBantuan = document.querySelector('[data-menu="bantuan"]');
-const menuDukungan = document.querySelector('[data-menu="dukungan"');
+const menuDukungan = document.querySelector('[data-menu="dukungan"]');
+const menuDokumentasi = document.querySelector('[data-menu="dokumentasi"]');
+const menuLaporkan = document.querySelector('[data-menu="laporkan"]');
 const dukunganRincian = document.querySelector("#dukunganRincian");
 const starting = document.querySelector("#starting");
 // tampilkan produk
@@ -2055,17 +2057,28 @@ document.querySelector("#dukunganRincian button").addEventListener("click", () =
 });
 
 function ambilTeks(selector) {
+  const elm = document.querySelector(selector);
+  if (elm === null) {
+    return "0";
+  }
   return document.querySelector(selector)
     .textContent.trim().replace(/\s+/g, " ");
 }
 
-function kirimLaporanWhatsApp() {
+async function kirimLaporanWhatsApp() {
+  
+  const cekProdukAktif = await ambilSemuaProduk();
+  
+  if (cekProdukAktif.length === 0) {
+    modalAlert("Data tidak tersedia", "Tidak ada data yang dapat diproses untuk dikirim sebagai laporan!", "Tutup");
+    return;
+  }
 
   const totalBeras = ambilTeks("#totalberas");
   const totalUang = ambilTeks("#totalUang");
   const untungKotor = ambilTeks("#keuntunganToko");
   const untungBersih = ambilTeks("#untungBersih");
-
+  
   let totalPengeluaran = 0;
 
   document.querySelectorAll(".nopeng").forEach(nopeng => {
@@ -2078,7 +2091,42 @@ function kirimLaporanWhatsApp() {
 
   const pengeluaran = new Intl.NumberFormat("id-ID")
     .format(totalPengeluaran);
+    
+  let rowTotalBeras = "";
+  let rowTotalUang = "";
+  let rowUntungKotor = "";
+  let rowPengeluaran = "";
+  let rowUntungBersih = "";
+  
+  if (totalBeras !== "0") {
+    rowTotalBeras = `\nTotal Beras:   *${totalBeras}*\n`;
+  }
+  
+  if (totalUang !== "0") {
+    rowTotalUang = `Total Uang:   *${totalUang}*\n`;
+  }
+  
+  if (untungKotor !== "0") {
+    rowUntungKotor = `Untung Kotor:   *${untungKotor}*\n`;
+  }
+  
+  if (pengeluaran !== "0") {
+    rowPengeluaran = `Pengeluaran:   *${pengeluaran}*\n`;
+  } else {
+    if (untungKotor !== "0") {
+    rowUntungKotor = `Untung Bersih:   *${untungKotor}*\n`;
+    }
+  }
+  
+  if (untungBersih !== "0") {
+    rowUntungBersih = `Untung Bersih:   *${untungBersih}*\n`;
+  }
+  
+  const pesan = [
+    `*LAPORAN TOKO*\n${rowTotalBeras}${rowTotalUang}${rowUntungKotor}${rowPengeluaran}${rowUntungBersih}\nTerima kasih.`
+  ];
 
+/*
   const pesan = [
     "*LAPORAN TOKO*",
     "",
@@ -2089,7 +2137,7 @@ function kirimLaporanWhatsApp() {
     `Untung Bersih :  ${untungBersih}`,
     "",
     "Terima kasih."
-  ].join("\n");
+  ].join("\n");*/
 
   const url = `https://wa.me/?text=${encodeURIComponent(pesan)}`;
 
@@ -2272,3 +2320,148 @@ function cekStatusInstal() {
 }
 
 cekStatusInstal();
+
+// bagian laporkan masalah
+menuLaporkan.addEventListener("click", () => {
+  tampilkanModalMasalah();
+});
+
+function tampilkanModalMasalah() {
+  // Cegah modal dibuat berulang
+  if (document.querySelector("#modalMasalah")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "modalMasalah";
+  modal.className = "modal show";
+
+  modal.innerHTML = `
+    <div class="box">
+      <div class="row">
+        <h3>Laporkan masalah</h3>
+      </div>
+
+      <div class="row">
+        <label for="judulMasalah">Judul</label>
+        <input id="judulMasalah" type="text"
+          placeholder="Masalah terkait">
+      </div>
+
+      <div class="row">
+        <label for="pesanMasalah">Pesan</label>
+        <textarea id="pesanMasalah"
+          placeholder="Masalah terkait yang ingin disampaikan"></textarea>
+      </div>
+
+      <div class="row center mt-20">
+        <button id="tutupModalMasalah" type="button" class="close">
+          Tutup
+        </button>
+        <button id="kirimPesanMasalah" type="button" class="save">
+          Kirim
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.append(modal);
+
+  const judul = modal.querySelector("#judulMasalah");
+  const pesan = modal.querySelector("#pesanMasalah");
+  const tutup = modal.querySelector("#tutupModalMasalah");
+  const kirim = modal.querySelector("#kirimPesanMasalah");
+
+  // Fokus otomatis ke input judul
+  judul.focus();
+
+  // Tutup modal
+  tutup.addEventListener("click", () => {
+    modal.remove();
+  });
+
+  // Kirim laporan ke WhatsApp
+  kirim.addEventListener("click", () => {
+    const teksJudul = judul.value.trim();
+    const teksPesan = pesan.value.trim();
+
+    if (!teksJudul) {
+      modalAlert("Wajib Diisi", "Judul tidak boleh kosong!", "Tutup");
+      judul.focus();
+      return;
+    }
+    
+    if (!teksPesan) {
+      modalAlert("Wajib Diisi", "Pesan tidak boleh kosong!", "Tutup");
+      pesan.focus();
+      return;
+    }
+
+    const nomorPengembang = "6281285242366";
+
+    const isiPesan =
+      `*LAPORAN MASALAH HB TOKO*\n\n` +
+      `Judul: ${teksJudul}\n\n` +
+      `Pesan:\n${teksPesan}`;
+
+    const url = `https://wa.me/${nomorPengembang}?text=${encodeURIComponent(isiPesan)}`;
+
+    window.open(url, "_blank");
+    
+    setTimeout(() => modal.remove(), 1000);
+  });
+}
+
+
+// bagian dokumentasi
+menuDokumentasi.addEventListener("click", () => {
+  tampilkanDokumentasi();
+});
+
+function tampilkanDokumentasi() {
+  // Cegah modal dibuat lebih dari satu kali
+  if (document.querySelector("#modalDokumentasi")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "modalDokumentasi";
+  modal.className = "modal show";
+
+  modal.innerHTML = `
+    <div class="box">
+      <div class="row">
+        <h3>Dokumentasi</h3>
+      </div>
+
+      <div class="row auto-y">
+        <p>HB Toko adalah aplikasi Hitung Barang yang dirancang untuk membantu pengguna mencatat, mengelola, dan menghitung data barang dengan mudah, praktis, dan terorganisir melalui browser maupun perangkat mobile.</p>
+
+        <p>Aplikasi ini membantu proses pencatatan barang berdasarkan merek, ukuran, modal, kemasan, dan jumlah. Setiap data yang dimasukkan dapat dikelola sehingga pengguna lebih mudah memantau barang yang sedang dihitung.</p>
+
+        <p>HB Toko dilengkapi dengan fitur pengelolaan data barang, penghitungan jumlah dan nilai modal, serta penyajian rincian keuangan untuk membantu pengguna mengetahui total perhitungan barang.</p>
+
+        <p>Aplikasi juga menyediakan fitur penyimpanan dan pencadangan data agar pengguna dapat menyimpan hasil perhitungan serta membukanya kembali ketika diperlukan.</p>
+
+        <p>Data aplikasi disimpan secara lokal pada perangkat pengguna melalui penyimpanan browser. Oleh karena itu, pengguna disarankan melakukan pencadangan data secara berkala untuk menghindari kehilangan data akibat penghapusan data browser, pergantian perangkat, atau kondisi lainnya.</p>
+
+        <p>HB Toko juga mendukung instalasi sebagai aplikasi melalui fitur Progressive Web App (PWA), sehingga dapat ditambahkan ke layar utama perangkat dan diakses dengan lebih praktis tanpa harus selalu membuka alamat website secara manual.</p>
+
+        <p>Untuk mendapatkan pengalaman penggunaan yang optimal, gunakan browser yang mendukung fitur penyimpanan lokal dan instalasi PWA. Pastikan juga untuk tidak menghapus data browser sebelum melakukan pencadangan.</p>
+
+        <p>HB Toko dikembangkan untuk memberikan kemudahan dalam proses pencatatan dan perhitungan barang dengan tampilan yang sederhana, penggunaan yang praktis, serta pengelolaan data yang lebih efisien.</p>
+
+        <p>Terima kasih telah menggunakan HB Toko. Semoga aplikasi ini dapat membantu aktivitas pencatatan dan perhitungan barang Anda.</p>
+      </div>
+
+      <div class="row center mt-20">
+        <button id="tutupDokumentasi" type="button" class="close">
+          Tutup
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.append(modal);
+
+  // Tombol tutup
+  modal.querySelector("#tutupDokumentasi").addEventListener("click", () => {
+    modal.remove();
+  });
+}

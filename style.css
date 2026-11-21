@@ -25,8 +25,21 @@ img {
   width: 100%;
 }
 
+p {
+  margin-bottom: 20px;
+}
+p:last-of-type {
+  margin-bottom: 0;
+}
+
 .mb-20 {
   margin-bottom: 20px;
+}
+
+.auto-y {
+  position: relative;
+  overflow-y: auto;
+  max-height: calc(100dvh - 147px);
 }
 
 .btn-add {
@@ -615,7 +628,7 @@ img {
   text-align: center;
   text-transform: capitalize;
 }
-.box input, .box select {
+.box input, .box select, .box textarea {
   display: block;
   padding: 10px;
   width: 100%;
@@ -623,11 +636,14 @@ img {
   border-radius: 2px;
   border: 1px solid gray;
 }
-.box input::placeholder {
+.box textarea {
+  height: 180px;
+}
+.box input::placeholder, .box textarea:placeholder {
   color: #888;
   font-family: monospace;
 }
-.box input:focus, .box select:focus {
+.box input:focus, .box select:focus, .box textarea:focus {
   outline-color: var(--blue);
 }
 .box .col input {
