@@ -351,7 +351,7 @@ async function tampilkanProduk() {
 let idProdukEdit = null;
 
 async function editProduk(id) {
-  const produk = await ambilProdukById("");
+  const produk = await ambilProdukById(id);
 
   if (!produk) {
     modalAlert("Tidak ditemukan", "Produk tidak ditemukan! Silakan coba lagi atau refresh halaman.", "Coba lagi");
