@@ -127,13 +127,6 @@ async function ambilSemuaProduk() {
 }
 */
 
-/*
-modalAlert = document.querySelector("#modalAlert");
-tutupAlert = document.querySelector("#tutupAlert");
-tutupAlert.addEventListener("click", () => {
-  modalAlert.classList.remove("show", "max-top");
-});*/
-
 // modal alert
 function modalAlert(teksJudul, teksPesan, teksTombol) {
   const modal = document.createElement("div");
@@ -164,9 +157,14 @@ function modalAlert(teksJudul, teksPesan, teksTombol) {
   box.appendChild(row3);
   modal.appendChild(box);
   document.body.appendChild(modal);
+  
+  tombol.addEventListener("mousedown", () => {
+    kolomSebelumnya = document.activeElement;
+  });
 
   tombol.addEventListener("click", () => {
     modal.remove();
+    kolomSebelumnya?.focus();
   });
 }
 
@@ -353,10 +351,10 @@ async function tampilkanProduk() {
 let idProdukEdit = null;
 
 async function editProduk(id) {
-  const produk = await ambilProdukById(id);
+  const produk = await ambilProdukById("");
 
   if (!produk) {
-    alert("Produk tidak ditemukan!");
+    modalAlert("Tidak ditemukan", "Produk tidak ditemukan! Silakan coba lagi atau refresh halaman.", "Coba lagi");
     return;
   }
 
@@ -415,7 +413,7 @@ konfirmasiHapus.addEventListener("click", async () => {
 
   } catch (error) {
     console.error(error);
-    alert("Gagal menghapus produk!");
+    modalAlert("Gagal", "Produk yang dipilih gagal dihapus!", "Coba lagi");
   }
 
 });
@@ -766,8 +764,29 @@ async function simpanProduk(data) {
 save.addEventListener("click", async () => {
 
   let kemasanvalue;
+  
+  if (merek.value.trim() === "") {
+    merek.focus();
+    return;
+  }
+  
+   if (ukuran.value === "") {
+     ukuran.focus();
+     return;
+   }
+   
+   if (harga.value === "" || Number(harga.value.replace(/\./g, "")) > 30000) {
+     harga.focus();
+     modalAlert("Pemberitahun", "30.000 adalah maksimal modal yang bisa dimasukkan!", "Mengerti");
+     return;
+   }
 
-  if (kemasan.value.trim() === "") {
+   if (banyak.value === "" || banyak.value === "0") {
+     banyak.focus();
+     return;
+   }
+
+  if (kemasan.value === "") {
     kemasanvalue = 0;
   } else {
     kemasanvalue = Number(kemasan.value.replace(/\./g, ""));
@@ -800,7 +819,7 @@ save.addEventListener("click", async () => {
 
   } catch (error) {
     console.error(error);
-    alert("Gagal menyimpan produk!");
+    modalAlert("Gagal", "Gagal menyimpan produk!", "Coba lagi");
   }
 
 });
@@ -1126,7 +1145,7 @@ document.querySelector("#simpanRincian")
     );
 
     if (!nama || !nominalRincian.value.trim()) {
-      alert("Nama dan nominal harus diisi!");
+      modalAlert("Wajib isi", "Nama dan nominal harus diisi!", "Mengerti");
       return;
     }
 
@@ -1154,7 +1173,7 @@ document.querySelector("#simpanRincian")
 
     } catch (error) {
       console.error(error);
-      alert("Gagal menyimpan rincian!");
+      modalAlert("Gagal", "Gagal menyimpan rincian!", "Coba lagi");
     }
 });
 
@@ -1200,7 +1219,7 @@ document.querySelector("#konfirmasiHapusRincian")
 
     } catch (error) {
       console.error(error);
-      alert("Gagal menghapus rincian!");
+      modalAlert("Gagal", "Gagal menghapus rincian!", "Coba lagi");
     }
 });
 // batas bagian rincian
@@ -1275,7 +1294,7 @@ async function init() {
 
   } catch (error) {
     console.error("Database gagal dibuka:", error);
-    alert("Database gagal dibuka!");
+    modalAlert("Gagal database", "Database gagal dibuka, coba lagi dan refresh halaman!", "Mengerti");
   }
 }
 init();
@@ -1408,7 +1427,7 @@ async function buatBackup() {
     );
 
     if (!tanggalPenghitungan) {
-      alert("Tanggal penghitungan belum tersedia!");
+      modalAlert("Perhatian", "Tanggal penghitungan belum tersedia, coba lagi atau klik tombol hitung ulang!", "Mengerti");
       return;
     }
 
@@ -1476,12 +1495,12 @@ async function buatBackup() {
 
     URL.revokeObjectURL(url);
 
-    alert("Backup berhasil dibuat!");
+    modalAlert("Berhasil", "Proses backup data berhasil dibuat!", "Tutup");
 
   } catch (error) {
 
     console.error(error);
-    alert("Gagal membuat backup!");
+    modalAlert("Gagal", "Proses backup data gagal dibuat!", "Coba lagi");
 
   }
 
@@ -1645,7 +1664,7 @@ fileBackup.addEventListener("change", async () => {
   } catch (error) {
 
     console.error(error);
-    alert("File backup tidak valid atau rusak: " + error.message);
+    modalAlert("Tidak valid", "File backup tidak valid atau rusak!", "Tutup");
 
   }
 
@@ -2178,3 +2197,78 @@ if ("serviceWorker" in navigator) {
   });
 }
 */
+
+// bagian instalasi aplikasi
+const btnInstal = document.querySelector("#btnInstal");
+const modalInstal = document.querySelector("#modalInstal");
+const batalInstal = document.querySelector("#batalInstal");
+const lanjutInstal = document.querySelector("#lanjutInstal");
+
+let deferredPrompt;
+
+// Tangkap event instalasi dari browser
+window.addEventListener("beforeinstallprompt", (event) => {
+  
+  event.preventDefault();
+  
+  deferredPrompt = event;
+  
+  btnInstal.classList.add("show");
+  
+});
+
+btnInstal.addEventListener("click", () => {
+  
+  if (!deferredPrompt) return;
+  
+  modalInstal.classList.add("show", "max-top");
+  
+});
+
+batalInstal.addEventListener("click", () => {
+  
+  modalInstal.classList.remove("show", "max-top");
+  
+});
+
+lanjutInstal.addEventListener("click", async () => {
+  
+  if (!deferredPrompt) return;
+  
+  modalInstal.classList.remove("show", "max-top");
+  
+  deferredPrompt.prompt();
+  
+  const hasil = await deferredPrompt.userChoice;
+  
+  console.log("Hasil instalasi:", hasil.outcome);
+  
+  deferredPrompt = null;
+  
+  btnInstal.classList.remove("show");
+  
+});
+
+window.addEventListener("appinstalled", () => {
+  
+  btnInstal.classList.remove("show");
+  
+  deferredPrompt = null;
+  
+  console.log("Aplikasi berhasil diinstal!");
+  
+});
+
+function cekStatusInstal() {
+  
+  const sudahTerinstal =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+  
+  if (sudahTerinstal) {
+    btnInstal.classList.remove("show");
+  }
+  
+}
+
+cekStatusInstal();
