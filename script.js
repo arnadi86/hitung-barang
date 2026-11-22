@@ -279,7 +279,7 @@ async function tampilkanProduk() {
     `;
 
     // Judul ukuran
-    tabTitle.textContent = `${ukuran ? `Beras ${ukuran}` : "Salah ukuran"}`;
+    tabTitle.textContent = `${ukuran ? `Beras ${ukuran}` : "Ukuran lainnya"}`;
 
     let textUkuran = "";
     if (ukuran === "eceran" || ukuran === "bukaan" || ukuran === "") {
@@ -518,8 +518,8 @@ btnOpen.addEventListener("click", () => {
   let ukuranProduk = localStorage.getItem("ukuranProduk");
   let kemasanProduk = localStorage.getItem("kemasanProduk");
 
-  if (ukuranProduk) {
-    kemasan.value = formatStok(kemasanProduk);
+  if (ukuranProduk || !kemasanProduk) {
+    kemasan.value = kemasanProduk;// formatStok(kemasanProduk);
     ukuran.value = ukuranProduk ? ukuranProduk : "0";
   } else {
     kemasan.value = formatStok(3000);
@@ -579,26 +579,32 @@ ukuran.addEventListener("change", () => {
   }
   
   if (valUkuran === "48 kg") {
-    kemasan.value = "0";
-    setKemasan = "0";
+    kemasan.value = "";
+    setKemasan = "";
     setUkuran = "48 kg";
   }
   if (valUkuran === "50 kg") {
-    kemasan.value = "0";
-    setKemasan = "0";
+    kemasan.value = "";
+    setKemasan = "";
     setUkuran = "50 kg";
   }
   
   if (valUkuran === "eceran") {
-    kemasan.value = "0";
-    setKemasan = "0";
+    kemasan.value = "";
+    setKemasan = "";
     setUkuran = "eceran";
   }
   
   if (valUkuran === "bukaan") {
-    kemasan.value = "0";
-    setKemasan = "0";
+    kemasan.value = "";
+    setKemasan = "";
     setUkuran = "bukaan";
+  }
+  
+  if (valUkuran === "") {
+    kemasan.value = "";
+    setKemasan = "";
+    setUkuran = "";
   }
 
   setTimeout(() => {
@@ -773,11 +779,11 @@ save.addEventListener("click", async () => {
     merek.focus();
     return;
   }
-  
+  /*
    if (ukuran.value === "") {
      ukuran.focus();
      return;
-   }
+   }*/
    
    if (harga.value === "" || Number(harga.value.replace(/\./g, "")) > 30000) {
      harga.focus();
@@ -1790,7 +1796,7 @@ function tampilkanProdukBackup(data) {
 
     // Judul ukuran
     tabTitle.textContent =
-      `${ukuran ? `Beras ${ukuran}` : "Salah ukuran"}`;
+      `${ukuran ? `Beras ${ukuran}` : "Ukuran lainnya"}`;
 
     let textUkuran = "";
 
