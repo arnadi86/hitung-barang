@@ -2146,6 +2146,10 @@ async function kirimLaporanWhatsApp() {
   window.open(url, "_blank");
 }
 
+document.querySelector("#refresh").addEventListener("click", () => {
+  window.location.reload();
+});
+
 const tombolMenu = document.querySelector("#tombolMenu");
 const dropdownMenu = document.querySelector("#dropdownMenu");
 
