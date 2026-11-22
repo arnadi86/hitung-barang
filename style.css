@@ -126,6 +126,8 @@ p:last-of-type {
 }
 
 #btnInstal {
+  width: auto;
+  height: auto;
   border: 0;
   padding: 4px 6px 4px 4px;
   border-radius: 4px;
