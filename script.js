@@ -8,7 +8,7 @@ function bukaDatabase() {
 
     request.onupgradeneeded = (event) => {
       const database = event.target.result;
-
+      
       // Object Store produk
       if (!database.objectStoreNames.contains("produk")) {
         database.createObjectStore("produk", {
@@ -178,9 +178,12 @@ const menuDukungan = document.querySelector('[data-menu="dukungan"]');
 const menuPanduan = document.querySelector('[data-menu="panduan"]');
 const menuDokumentasi = document.querySelector('[data-menu="dokumentasi"]');
 const menuTentang = document.querySelector('[data-menu="tentang"]');
+const menuBagikanData = document.querySelector('[data-menu="bagikanData"]');
+const menuBagikan = document.querySelector('[data-menu="bagikan"]');
 const menuLaporkan = document.querySelector('[data-menu="laporkan"]');
 const dukunganRincian = document.querySelector("#dukunganRincian");
 const starting = document.querySelector("#starting");
+
 // tampilkan produk
 let produkTerbaruId = null;
 async function tampilkanProduk() {
@@ -1515,6 +1518,108 @@ async function buatBackup() {
   }
 
 }
+
+
+menuBagikanData.addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
+  bagikanDataHitungan();
+});
+
+async function bagikanDataHitungan() {
+
+  try {
+
+    const tanggalPenghitungan = localStorage.getItem(
+      "tanggalPenghitungan"
+    );
+
+    if (!tanggalPenghitungan) {
+      modalAlert(
+        "Perhatian",
+        "Tanggal penghitungan belum tersedia!",
+        "Mengerti"
+      );
+      return;
+    }
+
+    const produk = await ambilSemuaProduk();
+    const rincian = await ambilSemuaRincian();
+
+    const sekarang = new Date();
+
+    const tanggalBackup =
+      sekarang.getFullYear() + "-" +
+      String(sekarang.getMonth() + 1).padStart(2, "0") + "-" +
+      String(sekarang.getDate()).padStart(2, "0");
+
+    const [tahun, bulan, tanggal] =
+      tanggalPenghitungan.split("-");
+
+    const namaBulan = [
+      "JANUARI", "FEBRUARI", "MARET", "APRIL",
+      "MEI", "JUNI", "JULI", "AGUSTUS",
+      "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"
+    ];
+
+    const dataBackup = {
+      versi: 1,
+      tanggalPenghitungan: tanggalPenghitungan,
+      tanggalBackup: tanggalBackup,
+      tanggal: sekarang.getDate(),
+      bulan: sekarang.getMonth() + 1,
+      tahun: sekarang.getFullYear(),
+      produk: produk,
+      rincian: rincian
+    };
+
+    const isiJSON = JSON.stringify(dataBackup, null, 2);
+
+    // Buat file TXT berisi JSON
+    const file = new File(
+      [isiJSON],
+      `HB_${tanggal}_${namaBulan[Number(bulan) - 1]}_${tahun}.txt`,
+      { type: "text/plain" }
+    );
+
+    // Periksa dukungan berbagi file
+    if (
+      !navigator.share ||
+      !navigator.canShare ||
+      !navigator.canShare({ files: [file] })
+    ) {
+      modalAlert(
+        "Tidak didukung",
+        "Perangkat atau browser tidak mendukung berbagi file.",
+        "Tutup"
+      );
+      return;
+    }
+
+    await navigator.share({
+      title: "Backup HB Toko",
+      files: [file]
+    });
+
+  } catch (error) {
+
+    if (error.name === "AbortError") return;
+
+    console.error(error);
+
+    modalAlert(
+      "Gagal",
+      "Data backup gagal dibagikan!",
+      "Coba lagi"
+    );
+
+  }
+
+}
+
+
+
+
+
 /** kode lama
 async function buatBackup() {
 
@@ -2332,6 +2437,37 @@ function cekStatusInstal() {
 }
 
 cekStatusInstal();
+
+// bagian bagikan aplikasi
+menuBagikan.addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
+  bagikanAplikasi();
+});
+
+async function bagikanAplikasi() {
+  const urlAplikasi =
+    window.location.origin + window.location.pathname;
+  
+  const pesan =
+    `${urlAplikasi}\n` +
+    `Yuk gunakan HB Toko untuk membantu menghitung dan mengelola barang toko!`;
+  
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "HB Toko",
+        text: pesan
+      });
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.error(error);
+      }
+    }
+  } else {
+    await navigator.clipboard.writeText(pesan);
+    modalAlert("Berhasil disalin", "Link aplikasi HB Toko berhasil disalin dan siap dibagikan!", "Tutup");
+  }
+}
 
 // bagian laporkan masalah
 menuLaporkan.addEventListener("click", () => {

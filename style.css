@@ -126,7 +126,7 @@ p:last-of-type {
 }
 
 #btnInstal {
-  width: auto;
+  width: 55px;
   height: auto;
   border: 0;
   padding: 4px 6px 4px 4px;
@@ -136,6 +136,7 @@ p:last-of-type {
   background: var(--white);
   font-weight: 650;
   display: none;
+  justify-content: center;
 }
 #btnInstal.show {
   display: flex;
@@ -710,12 +711,12 @@ p:last-of-type {
 }
 
 #halamanBackup {
-  background: #222;
+  background: var(--white);
   min-height: 100vh;
 }
 
 #halamanBackup .infoBackup {
-  background: #daa520;
+  background: var(--orange);
   color: var(--white);
   padding: 12px;
   text-align: center;

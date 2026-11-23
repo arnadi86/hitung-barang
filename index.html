@@ -55,6 +55,10 @@
           <i class="fa-solid fa-database"></i>
           Backup data
         </button>
+        <button data-menu="bagikanData" type="button">
+          <i class="fa-solid fa-file-export"></i>
+          Bagikan data
+        </button>
         <button data-menu="kirimLaporan" type="button">
           <i class="fa-solid fa-paper-plane"></i>
           Kirim laporan
@@ -71,6 +75,10 @@
           <i class="fa-solid fa-file-lines"></i>
           Dokumentasi
           </button>
+        <button data-menu="laporkan" type="button">
+          <i class="fa-solid fa-bug"></i>
+          Laporkan masalah
+        </button>
         <button data-menu="dukungan" type="button">
           <i class="fa-solid fa-gift"></i>
           Dukungan anda
@@ -79,9 +87,9 @@
           <i class="fa-solid fa-circle-exclamation"></i>
           Tentang HB toko
         </button>
-        <button data-menu="laporkan" type="button">
-          <i class="fa-solid fa-bug"></i>
-          Laporkan masalah
+        <button data-menu="bagikan" type="button">
+          <i class="fa-solid fa-share"></i>
+          Bagikan aplikasi
         </button>
       </div>
     </div>
@@ -286,7 +294,8 @@
   </div>
 
   <!-- Input untuk memilih file backup -->
-  <input type="file" id="fileBackup" accept=".json,application/json" hidden>
+  <input type="file" id="fileBackup" accept=".txt,text/plain,.json,app" hidden>
+  <!--<input type="file" id="fileBackup" accept=".json,application/json" hidden>-->
 
   <!-- Halaman arsip backup -->
   <div id="halamanBackup" hidden>
