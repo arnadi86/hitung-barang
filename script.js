@@ -3140,7 +3140,7 @@ async function periksaBackupMasuk() {
 
     // Ambil file dari Cache Storage
     const cache = await caches.open(
-      "hitung-barang-v1.0.45"
+      "hitung-barang-v1.0.46"
     );
 
     const alamatFile = new URL(
