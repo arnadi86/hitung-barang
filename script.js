@@ -3123,3 +3123,56 @@ function tampilkanDokumentasi() {
     modal.remove();
   });
 }
+
+
+
+
+async function periksaBackupMasuk() {
+
+  const params = new URLSearchParams(
+    window.location.search
+  );
+
+  if (params.get("backupMasuk") !== "1") return;
+
+  try {
+
+    const cache = await caches.open(
+      "hitung-barang-v1.0.41"
+    );
+
+    const response = await cache.match(
+      new URL("./file-backup-masuk", window.location.href)
+    );
+
+    if (!response) {
+      throw new Error("File backup tidak ditemukan!");
+    }
+
+    const teks = await response.text();
+
+    const data = JSON.parse(teks);
+
+    console.log("File backup berhasil diterima:", data);
+
+    modalAlert(
+      "Berhasil",
+      "File backup berhasil diterima HB Toko!",
+      "Mengerti"
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    modalAlert(
+      "Gagal",
+      "File backup tidak dapat dibaca!",
+      "Tutup"
+    );
+
+  }
+
+}
+
+periksaBackupMasuk();
