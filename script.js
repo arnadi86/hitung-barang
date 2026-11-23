@@ -100,32 +100,6 @@ async function ambilSemuaProduk() {
   });
 
 }
-/** kode lama
-async function ambilSemuaProduk() {
-
-  const transaksi = db.transaction(
-    "produk",
-    "readonly"
-  );
-
-  const store = transaksi.objectStore("produk");
-
-  const request = store.getAll();
-
-  return new Promise((resolve, reject) => {
-
-    request.onsuccess = () => {
-      resolve(request.result);
-    };
-
-    request.onerror = () => {
-      reject(request.error);
-    };
-
-  });
-
-}
-*/
 
 // modal alert
 function modalAlert(teksJudul, teksPesan, teksTombol) {
@@ -183,6 +157,47 @@ const menuBagikan = document.querySelector('[data-menu="bagikan"]');
 const menuLaporkan = document.querySelector('[data-menu="laporkan"]');
 const dukunganRincian = document.querySelector("#dukunganRincian");
 const starting = document.querySelector("#starting");
+
+
+
+
+const btnTema = document.getElementById("btnTema");
+
+function aturTema(tema) {
+  document.documentElement.setAttribute("data-theme", tema);
+  
+  
+  const warna = tema === "dark" ? "#1e293b" : "#1688c9";
+
+document.querySelector('meta[name="theme-color"]')
+  .setAttribute("content", warna);
+  
+  localStorage.setItem("tema", tema);
+  
+  const ikon = btnTema.querySelector("i");
+  
+  if (tema === "dark") {
+    ikon.className = "fa-solid fa-sun";
+  } else {
+    ikon.className = "fa-solid fa-moon";
+  }
+}
+
+btnTema.addEventListener("click", () => {
+  const temaSekarang =
+    document.documentElement.getAttribute("data-theme") || "light";
+  
+  const temaBaru = temaSekarang === "light" ? "dark" : "light";
+  
+  aturTema(temaBaru);
+});
+
+const temaTersimpan = localStorage.getItem("tema") || "light";
+aturTema(temaTersimpan);
+
+
+
+
 
 // tampilkan produk
 let produkTerbaruId = null;
@@ -782,11 +797,6 @@ save.addEventListener("click", async () => {
     merek.focus();
     return;
   }
-  /*
-   if (ukuran.value === "") {
-     ukuran.focus();
-     return;
-   }*/
    
    if (harga.value === "" || Number(harga.value.replace(/\./g, "")) > 30000) {
      harga.focus();
@@ -1363,15 +1373,6 @@ async function hitungUlang() {
   await hitungTotalBeras();
   await tampilkanRincian();
 }
-/** kode lama
-async function hitungUlang() {
-  await resetProduk();
-  await resetRincian();
-  await tampilkanProduk();
-  await hitungTotalBeras();
-  await tampilkanRincian();
-}
-*/
 
 // hapus semua produk
 async function resetProduk() {
@@ -1615,82 +1616,6 @@ async function bagikanDataHitungan() {
   }
 
 }
-
-
-
-
-
-/** kode lama
-async function buatBackup() {
-
-  try {
-
-    // Ambil data dari IndexedDB
-    const produk = await ambilSemuaProduk();
-    const rincian = await ambilSemuaRincian();
-
-    const sekarang = new Date();
-
-    const tanggal = sekarang.getDate();
-    const bulan = [
-      "JANUARI", "FEBRUARI", "MARET", "APRIL",
-      "MEI", "JUNI", "JULI", "AGUSTUS",
-      "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"
-    ][sekarang.getMonth()];
-    
-    const tahun = sekarang.getFullYear();
-    
-    // Susun isi backup
-    const dataBackup = {
-      versi: 1,
-      tanggalPenghitungan: sekarang.toISOString(),
-      tanggalBackup: sekarang.toISOString(),
-
-      tanggal: sekarang.getDate(),
-      bulan: sekarang.getMonth() + 1,
-      tahun: sekarang.getFullYear(),
-
-      produk: produk,
-      rincian: rincian
-    };
-
-    // Ubah menjadi JSON
-    const isiJSON = JSON.stringify(dataBackup, null, 2);
-
-    // Buat file
-    const file = new Blob(
-      [isiJSON],
-      { type: "application/json" }
-    );
-
-    const url = URL.createObjectURL(file);
-
-    // Nama file
-    const namaFile = `HB_${tanggal}_${bulan}_${tahun}.json`;
-
-    // Unduh file
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = namaFile;
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    URL.revokeObjectURL(url);
-
-    alert("Backup berhasil dibuat!");
-
-  } catch (error) {
-
-    console.error(error);
-    alert("Gagal membuat backup!");
-
-  }
-
-}
-*/
 
 menuHitung.addEventListener("click", () => {
   dropdownMenu.classList.remove("show");
@@ -2239,18 +2164,6 @@ async function kirimLaporanWhatsApp() {
     `*LAPORAN TOKO*\n${rowTotalBeras}${rowTotalUang}${rowUntungKotor}${rowPengeluaran}${rowUntungBersih}\nTerima kasih.`
   ];
 
-/*
-  const pesan = [
-    "*LAPORAN TOKO*",
-    "",
-    `Total Beras :  ${totalBeras}`,
-    `Total Uang :  ${totalUang}`,
-    `Untung Kotor :  ${untungKotor}`,
-    `Pengeluaran :  ${pengeluaran}`,
-    `Untung Bersih :  ${untungBersih}`,
-    "",
-    "Terima kasih."
-  ].join("\n");*/
 
   const url = `https://wa.me/?text=${encodeURIComponent(pesan)}`;
 
@@ -2350,18 +2263,6 @@ if ("serviceWorker" in navigator) {
 
   });
 }
-/** kode lama
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", async () => {
-    try {
-      await navigator.serviceWorker.register("./sw.js");
-      console.log("Service Worker berhasil didaftarkan!");
-    } catch (error) {
-      console.error("Service Worker gagal:", error);
-    }
-  });
-}
-*/
 
 // bagian instalasi aplikasi
 const btnInstal = document.querySelector("#btnInstal");

@@ -7,21 +7,37 @@
   --orange: hwb(43 7% 8%);
   --black-5: rgba(0, 0, 0, 0.5);
   --black-15: rgba(0, 0, 0, 0.15);
+  --bg: #ffffff;
+  --text: #222222;
+  --surface: #ffffff;
+  --border: #dddddd;
 }
+
+[data-theme="dark"] {
+  --bg: #1e293b;
+  --text: #f1f5f9;
+  --surface: #334155;
+  --border: #475569;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  caret-color: var(--blue);
 }
 html,
 body {
   overscroll-behavior-y: none;
 }
+
 body {
   font-size: 16px;
   font-family: sans-serif;
-  color: #222;
-  background: var(--white);
+  color: var(--text);
+  background: var(--bg);
   padding-top: 40px;
 }
 
@@ -119,14 +135,14 @@ p:last-of-type {
   height: 30px;
   border: none;
   border-radius: 8px;
-  font-size: 20px;
+  font-size: 15px;
   cursor: pointer;
   background: transparent;
   color: var(--white);
 }
 
 #btnInstal {
-  width: 55px;
+  width: 50px;
   height: auto;
   border: 0;
   padding: 4px 6px 4px 4px;
@@ -163,8 +179,7 @@ p:last-of-type {
   border: 0;
 }
 #btnPengumuman i {
-  color: #fff;
-  font-size: 20px;
+  font-size: 18px;
 }
 #modalPengumuman {
   display: none;
@@ -269,7 +284,9 @@ p:last-of-type {
 .menu-container {
   position: relative;
 }
-
+#tombolMenu {
+  font-size: 20px;
+}
 .dropdown-menu {
   position: absolute;
   top: calc(100% + 8px);
@@ -800,4 +817,166 @@ p:last-of-type {
   height: 100%;
   border: 0;
   display: block;
+}
+
+
+
+
+/* =================================
+   TEMA TERANG DAN GELAP
+================================= */
+
+/* TEMA GELAP: WARNA DASAR */
+
+[data-theme="dark"] .wrapper,
+[data-theme="dark"] .dropdown-menu,
+[data-theme="dark"] #modalPengumuman .modal-content,
+[data-theme="dark"] .box,
+[data-theme="dark"] #halamanBackup,
+[data-theme="dark"] .tables table {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* HEADER */
+
+[data-theme="dark"] .header {
+  background: #1e293b;
+  color: var(--text);
+  border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .header .title,
+[data-theme="dark"] .header button {
+  color: var(--text);
+}
+
+[data-theme="dark"] .header button:hover {
+  background: #334155;
+  color: #ffffff;
+}
+
+/* MENU DROPDOWN */
+
+[data-theme="dark"] .dropdown-menu {
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .dropdown-menu button {
+  color: var(--text);
+}
+
+[data-theme="dark"] .dropdown-menu button:hover {
+  background: #475569;
+  color: #ffffff;
+}
+
+/* TOMBOL TAMBAH PRODUK */
+
+[data-theme="dark"] .btn-add {
+  box-shadow:
+    0 0 0 1px #475569,
+    0 0 4px 1px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .btn-add:hover,
+[data-theme="dark"] .btn-add:active {
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* TABEL PRODUK */
+
+[data-theme="dark"] .tables tbody td {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .tables tbody tr:nth-child(even),
+[data-theme="dark"] .tables tbody tr:nth-child(even) td:nth-child(1),
+[data-theme="dark"] .tables tbody tr:nth-child(even) td:last-of-type {
+  background: #29384d;
+  color: var(--text);
+}
+
+[data-theme="dark"] .tables tbody tr td:nth-child(1),
+[data-theme="dark"] .tables tbody tr td:last-of-type,
+[data-theme="dark"] .tables tbody td span {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .tables tbody tr:hover,
+[data-theme="dark"] .tables tbody tr:hover td,
+[data-theme="dark"] .tables tbody tr:hover td:nth-child(1),
+[data-theme="dark"] .tables tbody tr:hover td:last-of-type {
+  background: #3b4b61;
+  color: var(--text);
+}
+
+/* RINCIAN KEUANGAN */
+
+[data-theme="dark"] .rincian table tr,
+[data-theme="dark"] .rincian table tr:nth-child(even) {
+  background: #29384d;
+  color: var(--text);
+}
+
+[data-theme="dark"] .rincian table th {
+  background: #0f172a;
+  color: var(--text);
+}
+
+[data-theme="dark"] .rincian table td {
+  color: var(--text);
+}
+
+/* MODAL DAN FORM */
+
+[data-theme="dark"] .box h3,
+[data-theme="dark"] .box label {
+  color: var(--text);
+}
+
+[data-theme="dark"] .box input,
+[data-theme="dark"] .box select,
+[data-theme="dark"] .box textarea {
+  background: #29384d;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+[data-theme="dark"] .box input::placeholder,
+[data-theme="dark"] .box textarea::placeholder {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .box input:focus,
+[data-theme="dark"] .box select:focus,
+[data-theme="dark"] .box textarea:focus {
+  outline-color: #60a5fa;
+}
+
+/* PENGUMUMAN */
+
+[data-theme="dark"] .itemPengumuman {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .itemPengumuman h4,
+[data-theme="dark"] .itemPengumuman p {
+  color: var(--text);
+}
+
+[data-theme="dark"] .itemPengumuman small {
+  color: #cbd5e1;
+}
+
+/* HALAMAN BACKUP */
+
+[data-theme="dark"] #halamanBackup {
+  color: var(--text);
 }

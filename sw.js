@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "hitung-barang-v1.0.471";
+const CACHE_NAME = "hitung-barang-v1.0.5";
 const CACHE_BACKUP = "hb-toko-backup";
 
 const FILES_TO_CACHE = [

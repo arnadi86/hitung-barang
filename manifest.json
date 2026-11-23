@@ -35,15 +35,6 @@
       ]
     }
   },
-  "file_handlers": [
-    {
-      "action": "./index.html?bukaFile=1",
-      "accept": {
-        "text/plain": [".txt"],
-        "application/json": [".json"]
-      }
-    }
-  ],
   "icons": [
     {
       "src": "./icons/icon-48.png",
