@@ -1,5 +1,6 @@
 
-const CACHE_NAME = "hitung-barang-v1.0.46";
+const CACHE_NAME = "hitung-barang-v1.0.47";
+const CACHE_BACKUP = "hb-toko-backup";
 
 const FILES_TO_CACHE = [
   "./",
@@ -71,7 +72,7 @@ self.addEventListener("fetch", event => {
         }
 
         // Simpan file sementara di Cache Storage
-        const cache = await caches.open(CACHE_NAME);
+        const cache = await caches.open(CACHE_BACKUP);
         
         const alamatFile = new URL(
           "./file-backup-masuk",
