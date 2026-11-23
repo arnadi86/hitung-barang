@@ -3138,7 +3138,7 @@ async function periksaBackupMasuk() {
   try {
 
     const cache = await caches.open(
-      "hitung-barang-v1.0.41"
+      "hitung-barang-v1.0.44"
     );
 
     const response = await cache.match(
