@@ -3127,6 +3127,7 @@ function tampilkanDokumentasi() {
 
 
 
+
 async function periksaBackupMasuk() {
 
   const params = new URLSearchParams(
@@ -3137,29 +3138,85 @@ async function periksaBackupMasuk() {
 
   try {
 
+    // Ambil file dari Cache Storage
     const cache = await caches.open(
-      "hitung-barang-v1.0.44"
+      "hitung-barang-v1.0.45"
     );
 
-    const response = await cache.match(
-      new URL("./file-backup-masuk", window.location.href)
+    const alamatFile = new URL(
+      "./file-backup-masuk",
+      window.location.href
     );
+
+    const response = await cache.match(alamatFile);
 
     if (!response) {
       throw new Error("File backup tidak ditemukan!");
     }
 
+    // Baca dan ubah JSON menjadi object
     const teks = await response.text();
-
     const data = JSON.parse(teks);
 
-    console.log("File backup berhasil diterima:", data);
+    // Periksa struktur backup
+    if (
+      data.versi !== 1 ||
+      !Array.isArray(data.produk) ||
+      !Array.isArray(data.rincian)
+    ) {
+      throw new Error("Format backup tidak sesuai!");
+    }
+
+    // Periksa tanggal penghitungan
+    const tanggal = new Date(data.tanggalPenghitungan);
+
+    if (isNaN(tanggal.getTime())) {
+      throw new Error("Tanggal backup tidak valid!");
+    }
+
+    // Simpan data backup sementara
+    dataBackupAktif = data;
+
+    // Tampilkan produk dan rincian
+    tampilkanProdukBackup(dataBackupAktif);
+    tampilkanRincianBackup(dataBackupAktif);
+
+    // Tampilkan tanggal backup
+    document.querySelector("#tanggalBackup").textContent =
+      tanggal.toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+
+    document.querySelector("#bulanBackup").textContent =
+      "Arsip bulan " +
+      tanggal.toLocaleDateString("id-ID", {
+        month: "long",
+        year: "numeric"
+      });
+
+    // Buka halaman Lihat Backup
+    document.querySelector("body > .header").hidden = true;
+    document.querySelector("body > .wrapper").hidden = true;
+
+    halamanBackup.hidden = false;
+
+    // Bersihkan parameter alamat
+    history.replaceState(
+      null,
+      "",
+      window.location.pathname
+    );
 
     modalAlert(
       "Berhasil",
-      "File backup berhasil diterima HB Toko!",
+      "Backup berhasil diterima dan siap dilihat!",
       "Mengerti"
     );
+
+    // Hapus file sementara setelah berhasil ditampilkan
+    await cache.delete(alamatFile);
 
   } catch (error) {
 
@@ -3167,12 +3224,13 @@ async function periksaBackupMasuk() {
 
     modalAlert(
       "Gagal",
-      "File backup tidak dapat dibaca!",
+      "File backup tidak valid atau tidak dapat ditampilkan!",
       "Tutup"
     );
 
   }
 
 }
+
 
 periksaBackupMasuk();
