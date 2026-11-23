@@ -3234,3 +3234,22 @@ async function periksaBackupMasuk() {
 
 
 periksaBackupMasuk();
+
+
+if ("launchQueue" in window) {
+  
+  launchQueue.setConsumer(async ({ files }) => {
+    
+    if (!files.length) return;
+    
+    const file = await files[0].getFile();
+    
+    modalAlert(
+      "File diterima",
+      "Nama file: " + file.name,
+      "Mengerti"
+    );
+    
+  });
+  
+}
